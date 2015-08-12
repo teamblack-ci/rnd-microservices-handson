@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: handson
+
+server:
+  port: ${port:8080}
+
+logging:
+  level:
+    rnd: INFO
+    feign: DEBUG
+    org.springframework: INFO
+
+weather:
+  version: 2.5
+  units: metric
