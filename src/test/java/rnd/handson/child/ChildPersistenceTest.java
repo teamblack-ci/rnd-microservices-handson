@@ -7,7 +7,6 @@ import rnd.handson.parent.Parent;
 import rnd.handson.parent.ParentRepository;
 import rnd.shared.test.TruncateTablesRule;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,17 +36,18 @@ public class ChildPersistenceTest {
 
     private Parent parent;
 
-    @Before
+    @BeforeTransaction
     public void given_child() {
         parent = new Parent();
         parent.setName("parent");
-        parentRepository.save(parent);
+        parentRepository.saveAndFlush(parent);
+        parentRepository.clear();
 
         for (int i = 0; i < CHILDREN; i++) {
             Child child = new Child();
             child.setName("child_" + i);
             child.setParent(parent);
-            childRepository.save(child);
+            childRepository.saveAndFlush(child);
         }
     }
 

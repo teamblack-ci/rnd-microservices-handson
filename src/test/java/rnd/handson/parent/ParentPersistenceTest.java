@@ -8,13 +8,12 @@ import rnd.shared.test.TruncateTablesRule;
 
 import javax.persistence.EntityManager;
 
-import org.hibernate.LazyInitializationException;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,21 +37,12 @@ public class ParentPersistenceTest {
 
     private Parent parent;
 
-    @Before
-    public void given_children() {
+    @BeforeTransaction
+    public void given_parent() {
         parent = new Parent();
         parent.setName("parent");
-        parent = parentRepository.save(parent);
+        parent = parentRepository.saveAndFlush(parent);
         parentRepository.clear();
-    }
-
-    @Test(expected = LazyInitializationException.class)
-    public void should_not_lazy_load_without_transaction() {
-        // GIVEN
-        parent = parentRepository.findOne(parent.getId());
-
-        // WHEN / THEN
-        parent.getAttributes().size();
     }
 
     @Test
