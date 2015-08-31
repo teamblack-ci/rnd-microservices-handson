@@ -37,6 +37,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("com.epages.microservice.handson:shared:0.+")
     runtime("com.h2database:h2")
+    runtime("org.springframework.data:spring-data-rest-hal-browser:2.4.0.RC1")
     testCompile("org.springframework.boot:spring-boot-starter-test") 
 }
 
