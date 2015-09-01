@@ -1,5 +1,7 @@
-package com.epages.microservice.handson.order;
+package com.epages.microservice.handson.order.orderstatus;
 
+import com.epages.microservice.handson.order.OrderService;
+import com.epages.microservice.handson.order.OrderStatus;
 import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;

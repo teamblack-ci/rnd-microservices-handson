@@ -18,6 +18,10 @@ cd ..
 cd bakery
 ./gradlew bootRepackage
 cd ..
+
+cd delivery
+./gradlew bootRepackage
+cd ..
 echo "--> building new containers"
 docker-compose build --no-cache
 
