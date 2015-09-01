@@ -1,9 +1,11 @@
 package com.epages.microservice.handson.catalog;
 
+import org.javamoney.moneta.Money;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.money.MonetaryAmount;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -28,6 +30,8 @@ public class Pizza {
     @Column(name = "IMAGE_URL", length = 255, nullable = false)
     private String imageUrl;
 
+    @Lob
+    private Money price;
 
     @ElementCollection
     private Set<Topping> toppings;
@@ -68,6 +72,14 @@ public class Pizza {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public MonetaryAmount getPrice() {
+        return price;
+    }
+
+    public void setPrice(Money price) {
+        this.price = price;
     }
 
     public Set<Topping> getToppings() {

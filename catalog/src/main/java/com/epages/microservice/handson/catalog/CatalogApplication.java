@@ -1,5 +1,7 @@
 package com.epages.microservice.handson.catalog;
 
+import com.epages.microservice.handson.shared.json.JsonConfiguration;
+import com.epages.microservice.handson.shared.web.WebConfiguration;
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -7,8 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
+@Import({ WebConfiguration.class, JsonConfiguration.class })
 public class CatalogApplication {
 
     private static final Logger log = LoggerFactory.getLogger(CatalogApplication.class);
