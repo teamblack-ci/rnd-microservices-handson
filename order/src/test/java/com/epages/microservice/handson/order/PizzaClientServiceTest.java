@@ -1,5 +1,16 @@
 package com.epages.microservice.handson.order;
 
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import javax.validation.ConstraintViolationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,15 +23,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -39,6 +41,8 @@ public class PizzaClientServiceTest {
             "  \"imageUrl\": \"http://www.sardegna-rustica.de/images/pizza.jpg\",\n" +
             "  \"price\": \"EUR 8.90\"}";
 
+    private String emptyResponse = "{}";
+
     private MockRestServiceServer mockServer;
 
     private Pizza pizza;
@@ -49,7 +53,7 @@ public class PizzaClientServiceTest {
 
     @Test
     public void should_get_pizza() throws URISyntaxException {
-        givenExisingPizza();
+        givenExistingPizza();
 
         whenPizzaIsRetrieved();
 
@@ -60,6 +64,15 @@ public class PizzaClientServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void should_fail_for_non_existing_pizza() throws URISyntaxException {
         givenNonExisingPizza();
+
+        whenPizzaIsRetrieved();
+
+        //then error
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void should_fail_for_missing_values_in_pizza_body() throws URISyntaxException {
+        givenPizzaWithMissingFields();
 
         whenPizzaIsRetrieved();
 
@@ -79,7 +92,7 @@ public class PizzaClientServiceTest {
         pizza = pizzaClientService.getPizza(new URI("http://localhost/catalog/1"));
     }
 
-    private void givenExisingPizza() {
+    private void givenExistingPizza() {
         mockServer.expect(
                 requestTo("http://localhost/catalog/1")).
                 andRespond(withSuccess(pizzaSampleResponse, MediaType.APPLICATION_JSON));
@@ -91,12 +104,16 @@ public class PizzaClientServiceTest {
                 andRespond(withStatus(HttpStatus.NOT_FOUND));
     }
 
+    private void givenPizzaWithMissingFields() {
+        mockServer.expect(
+                requestTo("http://localhost/catalog/1")).
+                andRespond(withSuccess(emptyResponse, MediaType.APPLICATION_JSON));
+    }
+
     private void givenErrorOnPizza() {
         mockServer.expect(
                 requestTo("http://localhost/catalog/1")).
                 andRespond(withServerError());
     }
-
-
 
 }
