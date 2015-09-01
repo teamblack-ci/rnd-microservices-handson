@@ -1,5 +1,6 @@
 package com.epages.microservice.handson.order;
 
+import com.epages.microservice.handson.shared.event.EventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,11 +15,15 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
     private PizzaClientService pizzaClientService;
+    private EventPublisher eventPublisher;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, PizzaClientService pizzaClientService) {
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            PizzaClientService pizzaClientService
+                            ) {
         this.orderRepository = orderRepository;
         this.pizzaClientService = pizzaClientService;
+        //this.eventPublisher = eventPublisher;
     }
 
     @Override

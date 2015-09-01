@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @Import({ WebConfiguration.class, JsonConfiguration.class })
+@EntityScan(basePackages = "com.epages")
 public class CatalogApplication {
 
     private static final Logger log = LoggerFactory.getLogger(CatalogApplication.class);

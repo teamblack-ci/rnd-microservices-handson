@@ -26,12 +26,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -111,7 +112,11 @@ public class OrderControllerTest {
 
         ordersResultAction
                 .andExpect(status().is(HttpStatus.OK.value()))
-                //.andDo(r -> System.out.println(r.getResponse().getContentAsString()))
+                .andExpect(jsonPath("$.status", is(order.getStatus().name())))
+                .andExpect(jsonPath("$.totalPrice", notNullValue()))
+                .andExpect(jsonPath("$.orderItems", hasSize(order.getItems().size())))
+                .andExpect(jsonPath("$._links.self.href",
+                        is(entityLinks.linkForSingleResource(Order.class, order.getId()).toUri().toString())))
         ;
     }
 

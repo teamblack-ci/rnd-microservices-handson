@@ -25,6 +25,7 @@ import java.util.List;
 @EnableSpringDataWebSupport
 @EnableJpaAuditing
 @Configuration
+@EntityScan(basePackages = "com.epages")
 public class OrderApplication {
 
     public static void main(String[] args) {
