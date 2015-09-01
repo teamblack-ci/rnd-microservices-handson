@@ -1,0 +1,27 @@
+data:
+  image: busybox
+  command: /bin/true
+  volumes:
+    - /var/log/graphite
+    - /var/lib/graphite/storage/whisper
+    - /var/lib/rabbitmq
+
+graphite:
+  image: mackerel/graphite
+  hostname: graphite
+  volumes_from:
+    - data
+  ports:
+    - "8181:8000"
+    - "2003:2003"
+    - "2004:2004"
+    - "7002:7002"
+
+rabbitmq:
+  image: rabbitmq:management
+  hostname: rabbitmq
+  volumes_from:
+    - data
+  ports:
+    - "5672:5672"
+    - "15672:15672"

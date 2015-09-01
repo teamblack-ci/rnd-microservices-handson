@@ -1,5 +1,6 @@
 package com.epages.microservice.handson.order;
 
+import com.google.common.base.Objects;
 import org.javamoney.moneta.Money;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.net.URI;
 import java.time.LocalDateTime;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -60,5 +62,31 @@ public class LineItem {
 
     public void setPrice(MonetaryAmount price) {
         this.price = price;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        LineItem lineitem = (LineItem) o;
+        return id.equals(lineitem.getId());
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("id", id)
+                .add("pizza", pizza)
+                .add("amount", amount)
+                .toString();
     }
 }

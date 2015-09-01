@@ -1,5 +1,6 @@
 package com.epages.microservice.handson.order;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.google.common.base.Objects;
 import org.javamoney.moneta.Money;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -124,5 +126,27 @@ public class Order implements Persistable<Long> {
         return items.stream()
                 .map(lineItem -> lineItem.getPrice().multiply(lineItem.getAmount()))
                 .reduce(MonetaryAmount::add).orElse(Money.of(0.0, "EUR"));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Order order = (Order) o;
+        return id.equals(order.getId());
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper(this).add("id", id).add("items", items).toString();
     }
 }

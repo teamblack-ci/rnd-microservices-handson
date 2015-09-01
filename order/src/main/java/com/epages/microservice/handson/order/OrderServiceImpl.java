@@ -1,6 +1,8 @@
 package com.epages.microservice.handson.order;
 
 import com.epages.microservice.handson.shared.event.EventPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,15 +16,17 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
     private PizzaClientService pizzaClientService;
-    private EventPublisher eventPublisher;
+    private OrderEventPublisher orderEventPublisher;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
-                            PizzaClientService pizzaClientService
-                            ) {
+                            PizzaClientService pizzaClientService,
+                            OrderEventPublisher orderEventPublisher) {
         this.orderRepository = orderRepository;
         this.pizzaClientService = pizzaClientService;
-        //this.eventPublisher = eventPublisher;
+        this.orderEventPublisher = orderEventPublisher;
     }
 
     @Override
@@ -32,7 +36,9 @@ public class OrderServiceImpl implements OrderService {
         }
         getLineItemPrices(order);
         Order savedOrder = orderRepository.save(order);
-        //TODO send event
+
+        orderEventPublisher.sendOrderCreatedEvent(savedOrder);
+        LOGGER.info("order created {}", order);
         return savedOrder;
     }
 
