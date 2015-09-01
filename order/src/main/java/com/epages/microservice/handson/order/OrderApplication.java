@@ -1,7 +1,7 @@
 package com.epages.microservice.handson.order;
 
-import com.epages.microservice.handson.shared.json.JsonConfiguration;
-import com.epages.microservice.handson.shared.web.WebConfiguration;
+import java.util.List;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.orm.jpa.EntityScan;
@@ -9,15 +9,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
-import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import com.epages.microservice.handson.shared.json.JsonConfiguration;
+import com.epages.microservice.handson.shared.web.WebConfiguration;
 
 @SpringBootApplication
 @Import({ WebConfiguration.class, JsonConfiguration.class })

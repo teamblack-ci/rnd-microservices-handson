@@ -1,21 +1,15 @@
 package com.epages.microservice.handson.order;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.RelProvider;
+import java.util.stream.Collectors;
+
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class OrderResourceAssembler extends ResourceAssemblerSupport<Order, OrderResource> {
 
-    private RelProvider relProvider;
-
-    @Autowired
-    public OrderResourceAssembler(RelProvider relProvider) {
+    public OrderResourceAssembler() {
         super(OrderController.class, OrderResource.class);
-        this.relProvider = relProvider;
     }
 
     @Override
