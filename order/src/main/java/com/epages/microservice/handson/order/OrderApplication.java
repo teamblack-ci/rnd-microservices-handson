@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,6 +24,7 @@ import com.epages.microservice.handson.shared.web.WebConfiguration;
 @EnableSpringDataWebSupport
 @EnableJpaAuditing
 @Configuration
+@EntityScan(basePackages = "com.epages")
 public class OrderApplication {
 
     public static void main(String[] args) {

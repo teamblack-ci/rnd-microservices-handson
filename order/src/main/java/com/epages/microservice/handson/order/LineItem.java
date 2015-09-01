@@ -22,8 +22,7 @@ public class LineItem {
 
     private Integer amount;
 
-    @Lob
-    private Money price;
+    private MonetaryAmount price;
 
     @Version
     private Integer version;
@@ -59,7 +58,7 @@ public class LineItem {
         return price;
     }
 
-    public void setPrice(Money price) {
+    public void setPrice(MonetaryAmount price) {
         this.price = price;
     }
 }

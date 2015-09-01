@@ -3,12 +3,12 @@ package com.epages.microservice.handson.catalog;
 import org.javamoney.moneta.Money;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import javax.money.MonetaryAmount;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "PIZZA")
@@ -30,8 +30,9 @@ public class Pizza {
     @Column(name = "IMAGE_URL", length = 255, nullable = false)
     private String imageUrl;
 
-    @Lob
-    private Money price;
+    @Basic
+    @Column(name = "PRICE")
+    private MonetaryAmount price;
 
     @ElementCollection
     private Set<Topping> toppings;
@@ -78,7 +79,7 @@ public class Pizza {
         return price;
     }
 
-    public void setPrice(Money price) {
+    public void setPrice(MonetaryAmount price) {
         this.price = price;
     }
 
