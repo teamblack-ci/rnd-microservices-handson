@@ -2,14 +2,12 @@ package com.epages.microservice.handson.order;
 
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OrderResourceAssembler extends ResourceAssemblerSupport<Order, OrderResource> {
 
-    @Autowired
     public OrderResourceAssembler() {
         super(OrderController.class, OrderResource.class);
     }
