@@ -5,4 +5,4 @@ VOLUME /app
 
 WORKDIR /app
 
-ENTRYPOINT ["java","-jar","/app/handson-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/app/catalog-0.0.1-SNAPSHOT.jar"]

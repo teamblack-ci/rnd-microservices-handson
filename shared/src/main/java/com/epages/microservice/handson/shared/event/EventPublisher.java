@@ -3,8 +3,10 @@ package com.epages.microservice.handson.shared.event;
 import java.io.IOException;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import com.epages.microservice.handson.shared.json.JsonMapTypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -33,6 +35,16 @@ public class EventPublisher {
         final String event = createEvent(type, jsonPayload);
         LOGGER.info("Publishing event '{}'", event);
         rabbitTemplate.convertAndSend(event);
+    }
+
+    public void publish(String type, Map<String, Object> payloadMap) {
+        String jsonPayload = null;
+        try {
+            jsonPayload = objectMapper.writeValueAsString(payloadMap);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(String.format("Could not serialize event from payload '%s'", payloadMap), e);
+        }
+        publish(type, jsonPayload);
     }
 
     protected String createEvent(String type, String jsonPayload) {

@@ -1,6 +1,9 @@
 spring:
   application:
     name: order
+  rabbitmq:
+    host: ${rabbitmq.host:rabbitmq}
+    port: ${rabbitmq.port:5672}
 
 server:
   port: ${port:8081}

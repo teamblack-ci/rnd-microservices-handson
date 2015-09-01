@@ -2,6 +2,8 @@ package com.epages.microservice.handson.order;
 
 import java.util.List;
 
+import com.epages.microservice.handson.shared.event.EventAutoConfiguration;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.orm.jpa.EntityScan;
@@ -19,12 +21,13 @@ import com.epages.microservice.handson.shared.json.JsonConfiguration;
 import com.epages.microservice.handson.shared.web.WebConfiguration;
 
 @SpringBootApplication
-@Import({ WebConfiguration.class, JsonConfiguration.class })
+@Import({ WebConfiguration.class, JsonConfiguration.class, EventAutoConfiguration.class })
 @EnableSpringConfigured
 @EnableSpringDataWebSupport
 @EnableJpaAuditing
 @Configuration
 @EntityScan(basePackages = "com.epages")
+@EnableRabbit
 public class OrderApplication {
 
     public static void main(String[] args) {
