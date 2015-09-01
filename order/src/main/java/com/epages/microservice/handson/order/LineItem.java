@@ -1,16 +1,22 @@
 package com.epages.microservice.handson.order;
 
-import com.google.common.base.Objects;
-import org.javamoney.moneta.Money;
-import org.springframework.data.annotation.LastModifiedDate;
+import static com.google.common.base.MoreObjects.toStringHelper;
+import static javax.persistence.GenerationType.IDENTITY;
 
-import javax.money.MonetaryAmount;
-import javax.persistence.*;
 import java.net.URI;
 import java.time.LocalDateTime;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.money.MonetaryAmount;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
+
+import org.springframework.data.annotation.LastModifiedDate;
+
+import com.google.common.base.Objects;
 
 @Entity
 @Table(name = "LINE_ITEM")

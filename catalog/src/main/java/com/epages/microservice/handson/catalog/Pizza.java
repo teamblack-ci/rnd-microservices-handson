@@ -1,14 +1,21 @@
 package com.epages.microservice.handson.catalog;
 
-import org.javamoney.moneta.Money;
-import org.springframework.data.annotation.LastModifiedDate;
+import static javax.persistence.GenerationType.IDENTITY;
 
-import javax.money.MonetaryAmount;
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.money.MonetaryAmount;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
+
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "PIZZA")
