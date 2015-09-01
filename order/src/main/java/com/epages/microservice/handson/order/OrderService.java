@@ -12,4 +12,6 @@ public interface OrderService {
     public Optional<Order> getOrder(Long id);
 
     public Page<Order> getAll(Pageable pageable);
+
+    public void setOrderStatus(Long id, OrderStatus status);
 }

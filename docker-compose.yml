@@ -39,3 +39,17 @@ bakery:
     - PORT=8083
   ports:
     - "8083:8083"
+
+delivery:
+  build: delivery
+  volumes:
+    - delivery/build/libs:/app
+  external_links:
+    - infrastructure_rabbitmq_1:rabbitmq
+  environment:
+    - PROFILE=prod
+    - RABBITMQ_HOST=rabbitmq
+    - RABBITMQ_PORT=5672
+    - PORT=8084
+  ports:
+    - "8084:8084"

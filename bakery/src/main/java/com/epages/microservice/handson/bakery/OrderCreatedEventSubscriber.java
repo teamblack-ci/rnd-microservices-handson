@@ -30,7 +30,8 @@ public class OrderCreatedEventSubscriber extends AbstractEventSubscriber {
         final Map<String, Object> payload = (Map<String, Object>) getPayload(event);
         try {
             Order order = objectMapper.readValue(objectMapper.writeValueAsString(payload), Order.class);
-            bakeryService.handleBakeryOrder(order);
+            bakeryService.acknowledgeOrder(order);
+            bakeryService.bakeOrder(order);
         } catch (IOException e) {
             LOGGER.error("Error deserializing Order {}", event, e);
             throw new RuntimeException(e);

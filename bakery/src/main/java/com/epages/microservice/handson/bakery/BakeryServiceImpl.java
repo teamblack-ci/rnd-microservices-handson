@@ -3,6 +3,7 @@ package com.epages.microservice.handson.bakery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 
@@ -17,11 +18,15 @@ public class BakeryServiceImpl implements BakeryService {
         this.bakeryEventPublisher = bakeryEventPublisher;
     }
 
-    @Async("bakeryThreadPoolTaskExecutor")
-    public void handleBakeryOrder(Order order) {
+
+    @Override
+    public void acknowledgeOrder(Order order) {
         order.setEstimatedTimeOfCompletion(LocalDateTime.now().plusMinutes(TIME_TO_BAKE_PIZZA_IN_MILLIS));
-        delay(2000l);
         bakeryEventPublisher.sendBakingOrderReceivedEvent(order);
+    }
+
+    @Async("bakeryThreadPoolTaskExecutor")
+    public void bakeOrder(Order order) {
         delay(TIME_TO_BAKE_PIZZA_IN_MILLIS);
         bakeryEventPublisher.sendBakingFinishedEvent(order);
 
