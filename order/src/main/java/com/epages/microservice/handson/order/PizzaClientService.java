@@ -1,8 +1,9 @@
 package com.epages.microservice.handson.order;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -18,20 +19,16 @@ public class PizzaClientService {
     }
 
     public Pizza getPizza(URI pizzaUri) {
-        ResponseEntity<Pizza> pizzaResponse;
         try {
-            pizzaResponse = restTemplate.getForEntity(pizzaUri, Pizza.class);
-        } catch (Throwable t) {
-            throw new IllegalArgumentException(String.format("Unable to retrieve Pizza URI %s - error is %s",
-                    pizzaUri, t.getMessage()),t);
+            return restTemplate.getForObject(pizzaUri, Pizza.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                throw new IllegalArgumentException(String.format("Pizza with URI %s could not be found",pizzaUri), e);
+            } else {
+                throw e;
+            }
+
         }
 
-        if (!pizzaResponse.getStatusCode().is4xxClientError()
-                && !pizzaResponse.getStatusCode().is5xxServerError()) {
-            return pizzaResponse.getBody();
-        } else {
-            throw new IllegalArgumentException(String.format("Pizza URI %s is not valid - returned %s",
-                    pizzaUri, pizzaResponse.getStatusCode()));
-        }
     }
 }
