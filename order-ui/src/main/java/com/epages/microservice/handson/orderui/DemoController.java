@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/ng")
+@RequestMapping("/")
 public class DemoController {
 	@Value("${catalog.api.backend.host}")
 	private String catalogApiBackendHost;
@@ -17,7 +17,7 @@ public class DemoController {
 	
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView home() {
-        ModelAndView modelAndView = new ModelAndView("index-ng");
+        ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("orderApiBackendHost", orderApiBackendHost);
         modelAndView.addObject("catalogApiBackendHost", catalogApiBackendHost);
         return modelAndView;

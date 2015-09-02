@@ -15,7 +15,7 @@
     <script src="http://cdn.jsdelivr.net/underscorejs/1.5.1/underscore-min.js"></script>
     <script type="text/javascript" th:inline="javascript">
   var orderApiBackendHost = /*[[${orderApiBackendHost}]]*/ 'http://192.168.59.103';
-  var catalogApiBackendHost = /*[[${catalogApiBackendHost}]]*/ 'http://192.168.59.103';
+  var catalogApiBackendHost = /*[[${catalogApiBackendHost}]]*/ 'http://localhost:8082';
   var ang = angular.module('greenfield',["restangular"]);
 
   // Inject Restangular into your controller
@@ -24,122 +24,21 @@
     Restangular.setFullResponse(true);
     var pizzaResource = Restangular.all('pizzas');
 
+    $scope.cart = {};
     pizzaResource.getList().then(function(pizzas) {
-      $scope.pizzas = carts.data;
+      $scope.pizzas = pizzas.data._embedded.pizzas;
     });
 
-    $scope.belongsToActiveShop = function(obj) {
-      if ($scope.activeShop != null)
-        return obj.shopId == $scope.activeShop.shopId;
-      else
-        return false;
-    };
-
-    $scope.belongsToCartOfActiveShop = function(obj) {
-      if ($scope.activeShop != null) {
-        var activeShopCarts = $scope.carts.filter(function(item) { return item.shopId == $scope.activeShop.shopId});
-        return activeShopCarts.filter(function(item) { return item.cartId == obj.cart.cartId}).length > 0;
+    $scope.addToCart = function(pizza) {
+      var pizzaUri = pizza._links.self.href;
+      console.log(pizzaUri);
+      if (pizzaUri in $scope.cart) {
+        $scope.cart[pizzaUri] = $scope.cart[pizzaUri] + 1;
+      } else {
+        $scope.cart[pizzaUri] = 1;
       }
-      return false;
+      console.log($scope.cart);
     };
-
-    $scope.loadShops = function() {
-      shopResource.getList().then(function(shops) {
-        $scope.shops = shops.data;
-      });
-    };
-
-    $scope.loadProducts = function() {
-      var activeShopId = ($scope.activeShop == null) ? null : $scope.activeShop.shopId;
-      console.log("activeShopId: " + activeShopId);
-      productsResource.getList({"shopId": activeShopId}).then(function(products) {
-        $scope.products = products.data;
-      });
-    };
-
-    $scope.loadOrders = function() {
-      ordersResource.getList().then(function(orders) {
-        $scope.orders = orders.data;
-      });
-    }
-
-    function getIdFromLocation(location) {
-      return location.substring(location.lastIndexOf("/") + 1);
-    }
-
-    $scope.add = function() {
-      shopResource.post($scope.newShop, {shopType: $scope.newShop.type}).then(function(response){
-        var id = getIdFromLocation(response.headers('Location'));
-
-        $scope.createdShopId = id;
-        $scope.loadShops();
-        $scope.loadProducts();
-      });
-    };
-
-    $scope.createCart = function (shop) {
-      var shopToSend = {shopId: shop.shopId};
-      cartsResource.post(shopToSend).then(function(response) {
-        var id = getIdFromLocation(response.headers('Location'));
-        $scope.createdCartId = id;
-        cartsResource.getList().then(function(carts) {
-          $scope.carts = carts.data;
-          for (var item in carts.data) {
-            if (item.cartId == $scope.createdCartId) {
-              $scope.activeCart = item;
-              console.log("there");
-              continue;
-            }
-          }
-        });
-      });
-    };
-
-    $scope.order = function(cart) {
-      var cartToSend = {cartId: cart.cartId};
-      $scope.orders.post(cartToSend).then(function(newResource) {
-        ordersResource.getList().then(function(orders) {
-          $scope.orders = orders.data;
-        });
-      });
-    };
-
-    $scope.setActiveShop = function(shop) {
-      $scope.activeShop = shop;
-      $scope.loadProducts();
-    };
-
-    $scope.setActiveCart = function(cart) {
-      $scope.activeCart = cart;
-    };
-
-
-    $scope.addToCart = function(product) {
-      var cart = $scope.activeCart;
-      var productToSend = {productId: product.productId};
-      cart.post("lineItems", productToSend).then(function(newResource) {
-        cartsResource.getList().then(function(carts) {
-          $scope.carts = carts.data;
-        });
-      });
-    };
-
-    $scope.cancelOrder = function(order) {
-      order.post("cancel").then(function(newResource) {
-        $scope.loadOrders();
-      });
-    };
-
-    $scope.confirmOrder = function(order) {
-      order.post("confirm").then(function(newResource) {
-        $scope.loadOrders();
-      });
-    };
-
-    $scope.loadShops();
-    $scope.loadProducts();
-    $scope.loadOrders();
-
   }]);
 
 
@@ -185,13 +84,14 @@
 <!-- Page Content -->
 <div class="container" style="margin-top:100px;">
     <div id="pizzas">
-        <h3>Products</h3>
+        <h3>Pizzas</h3>
         <table class="table table-striped">
-            <thead><th>Name</th><th>Price</th></thead>
+            <thead><th></th><th>Name</th><th>Price</th></thead>
             <tbody ng-repeat="pizza in pizzas">
             <tr>
+                <td class="col-md-2"><img src="{{pizza.imageUrl}}" style="width:100px"/></td>
                 <td class="col-md-2">{{pizza.name}}</td>
-                <td class="col-md-4">{{pizza.price}}</td>
+                <td class="col-md-2">{{pizza.price}}</td>
                 <td class="col-md-2">
               <span>
                 <button type="submit" ng-click="addToCart(pizza)">Add to cart</button>
@@ -202,36 +102,17 @@
         </table>
     </div>
 
-    <div id="carts">
-        <h3>Carts</h3>
-      <span ng-show="activeCart">
-        <h4>Active Cart {{activeCart.cartId}}</h4>
-      </span>
+    <div id="cart">
+        <h3>Cart</h3>
         <table class="table table-striped">
             <thead><th>Cart Id</th><th>Shop Id</th><th>Line Items</th><th></th></thead>
-            <tbody ng-repeat="cart in carts | filter: belongsToActiveShop">
+            <tbody ng-repeat="item in cart">
             <tr ng-class="{success: createdCartId==cart.cartId, info: activeCart.cartId==cart.cartId}">
-                <td class="col-md-4">{{cart.cartId}}</td>
-                <td class="col-md-4">{{cart.shopId}}</td>
-                <td class="col-md-2">{{cart.lineItems.length}}</td>
+                <td class="col-md-4">{{carts[item].name}}</td>
+                <td class="col-md-4">{{item}}</td>
+                <td class="col-md-2"></td>
                 <td class="col-md-1"><button type="submit" ng-click="setActiveCart(cart)">Set Active</button></td>
                 <td class="col-md-1"><button type="submit" ng-click="order(cart)">Place Order</button></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div id="orders">
-        <h3>Orders</h3>
-        <table class="table table-striped">
-            <thead><th>Order Id</th><th>Cart Id</th><th>State</th><th></th></thead>
-            <tbody ng-repeat="order in orders | filter: belongsToCartOfActiveShop">
-            <tr>
-                <td class="col-md-4">{{order.orderId}}</td>
-                <td class="col-md-4">{{order.cart.cartId}}</td>
-                <td class="col-md-2">{{order.state}}</td>
-                <td class="col-md-1"><button type="submit" ng-click="cancelOrder(order)">Cancel</button></td>
-                <td class="col-md-1"><button type="submit" ng-click="confirmOrder(order)">Confirm</button></td>
             </tr>
             </tbody>
         </table>
