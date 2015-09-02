@@ -1,0 +1,271 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" ng-app="greenfield">
+<head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Greenfield Demo Application</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="css/meadow.css" />
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/restangular/1.1.3/restangular.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/underscorejs/1.5.1/underscore-min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+  var orderApiBackendHost = /*[[${orderApiBackendHost}]]*/ 'http://192.168.59.103';
+  var catalogApiBackendHost = /*[[${catalogApiBackendHost}]]*/ 'http://192.168.59.103';
+  var ang = angular.module('greenfield',["restangular"]);
+
+  // Inject Restangular into your controller
+  ang.controller("MainCtrl",["Restangular","$scope",function(Restangular,$scope){
+    Restangular.setBaseUrl(apiBackendHost);
+    Restangular.setFullResponse(true);
+    var shopResource = Restangular.all('shops');
+    var productsResource = Restangular.all('products');
+    var cartsResource = Restangular.all('carts');
+    var ordersResource = Restangular.all('orders');
+
+
+    cartsResource.getList().then(function(carts) {
+      $scope.carts = carts.data;
+    });
+
+    $scope.belongsToActiveShop = function(obj) {
+      if ($scope.activeShop != null)
+        return obj.shopId == $scope.activeShop.shopId;
+      else
+        return false;
+    };
+
+    $scope.belongsToCartOfActiveShop = function(obj) {
+      if ($scope.activeShop != null) {
+        var activeShopCarts = $scope.carts.filter(function(item) { return item.shopId == $scope.activeShop.shopId});
+        return activeShopCarts.filter(function(item) { return item.cartId == obj.cart.cartId}).length > 0;
+      }
+      return false;
+    };
+
+    $scope.loadShops = function() {
+      shopResource.getList().then(function(shops) {
+        $scope.shops = shops.data;
+      });
+    };
+
+    $scope.loadProducts = function() {
+      var activeShopId = ($scope.activeShop == null) ? null : $scope.activeShop.shopId;
+      console.log("activeShopId: " + activeShopId);
+      productsResource.getList({"shopId": activeShopId}).then(function(products) {
+        $scope.products = products.data;
+      });
+    };
+
+    $scope.loadOrders = function() {
+      ordersResource.getList().then(function(orders) {
+        $scope.orders = orders.data;
+      });
+    }
+
+    function getIdFromLocation(location) {
+      return location.substring(location.lastIndexOf("/") + 1);
+    }
+
+    $scope.add = function() {
+      shopResource.post($scope.newShop, {shopType: $scope.newShop.type}).then(function(response){
+        var id = getIdFromLocation(response.headers('Location'));
+
+        $scope.createdShopId = id;
+        $scope.loadShops();
+        $scope.loadProducts();
+      });
+    };
+
+    $scope.createCart = function (shop) {
+      var shopToSend = {shopId: shop.shopId};
+      cartsResource.post(shopToSend).then(function(response) {
+        var id = getIdFromLocation(response.headers('Location'));
+        $scope.createdCartId = id;
+        cartsResource.getList().then(function(carts) {
+          $scope.carts = carts.data;
+          for (var item in carts.data) {
+            if (item.cartId == $scope.createdCartId) {
+              $scope.activeCart = item;
+              console.log("there");
+              continue;
+            }
+          }
+        });
+      });
+    };
+
+    $scope.order = function(cart) {
+      var cartToSend = {cartId: cart.cartId};
+      $scope.orders.post(cartToSend).then(function(newResource) {
+        ordersResource.getList().then(function(orders) {
+          $scope.orders = orders.data;
+        });
+      });
+    };
+
+    $scope.setActiveShop = function(shop) {
+      $scope.activeShop = shop;
+      $scope.loadProducts();
+    };
+
+    $scope.setActiveCart = function(cart) {
+      $scope.activeCart = cart;
+    };
+
+
+    $scope.addToCart = function(product) {
+      var cart = $scope.activeCart;
+      var productToSend = {productId: product.productId};
+      cart.post("lineItems", productToSend).then(function(newResource) {
+        cartsResource.getList().then(function(carts) {
+          $scope.carts = carts.data;
+        });
+      });
+    };
+
+    $scope.cancelOrder = function(order) {
+      order.post("cancel").then(function(newResource) {
+        $scope.loadOrders();
+      });
+    };
+
+    $scope.confirmOrder = function(order) {
+      order.post("confirm").then(function(newResource) {
+        $scope.loadOrders();
+      });
+    };
+
+    $scope.loadShops();
+    $scope.loadProducts();
+    $scope.loadOrders();
+
+  }]);
+
+
+  </script>
+</head>
+<!-- Body tag augmented with ngController directive  -->
+<body ng-controller="MainCtrl">
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header" style="height:100px;">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img id="logo" src="img/greenfield-logo-small.png" style="height: 75px"/></a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#orders">Orders</a>
+                </li>
+                <li>
+                    <a href="#shops">Shops</a>
+                </li>
+                <li>
+                    <a href="#products">Products</a>
+                </li>
+                <li>
+                    <a href="#carts">Carts</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container" style="margin-top:100px;">
+    <div id="shops">
+        <h3>New Shop</h3>
+        <label for="">Create shop</label><input type="text" ng-model="newShop.type"/><button type="submit" ng-click="add()">add</button>
+
+        <div ng-show="createdShopId">Created {{createdShopId}}</div>
+        <h3>Shops</h3>
+
+        <table class="table table-condensed table-striped">
+            <thead><th>Shop Id</th><th>Shop Type</th></thead>
+            <tbody ng-repeat="shop in shops">
+            <tr ng-class="{success: createdShopId==shop.shopId, info: activeShop.shopId==shop.shopId}">
+                <td class="col-md-4" ng-class="{info: activeShop.shopId==shop.shopId}">{{shop.shopId}}</td>
+                <td class="col-md-4">{{shop.type}}</td>
+                <td class="col-md-2">
+                    <button type="submit" ng-click="createCart(shop)">Create Cart</button>
+                </td>
+                <td class="col-md-2">
+                    <button type="submit" ng-click="setActiveShop(shop)">Set Active</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="products">
+        <h3>Products</h3>
+        <table class="table table-striped">
+            <thead><th>Product Id</th><th>Name</th><th>Shop Id</th></thead>
+            <tbody ng-repeat="product in products | filter: belongsToActiveShop">
+            <tr>
+                <td class="col-md-4">{{product.productId}}</td>
+                <td class="col-md-2">{{product.name.localizedValues['en']}}</td>
+                <td class="col-md-4">{{product.shopId}}</td>
+                <td class="col-md-2">
+              <span ng-show="activeCart.shopId == product.shopId">
+                <button type="submit" ng-click="addToCart(product)">Add to cart</button>
+              </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="carts">
+        <h3>Carts</h3>
+      <span ng-show="activeCart">
+        <h4>Active Cart {{activeCart.cartId}}</h4>
+      </span>
+        <table class="table table-striped">
+            <thead><th>Cart Id</th><th>Shop Id</th><th>Line Items</th><th></th></thead>
+            <tbody ng-repeat="cart in carts | filter: belongsToActiveShop">
+            <tr ng-class="{success: createdCartId==cart.cartId, info: activeCart.cartId==cart.cartId}">
+                <td class="col-md-4">{{cart.cartId}}</td>
+                <td class="col-md-4">{{cart.shopId}}</td>
+                <td class="col-md-2">{{cart.lineItems.length}}</td>
+                <td class="col-md-1"><button type="submit" ng-click="setActiveCart(cart)">Set Active</button></td>
+                <td class="col-md-1"><button type="submit" ng-click="order(cart)">Place Order</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="orders">
+        <h3>Orders</h3>
+        <table class="table table-striped">
+            <thead><th>Order Id</th><th>Cart Id</th><th>State</th><th></th></thead>
+            <tbody ng-repeat="order in orders | filter: belongsToCartOfActiveShop">
+            <tr>
+                <td class="col-md-4">{{order.orderId}}</td>
+                <td class="col-md-4">{{order.cart.cartId}}</td>
+                <td class="col-md-2">{{order.state}}</td>
+                <td class="col-md-1"><button type="submit" ng-click="cancelOrder(order)">Cancel</button></td>
+                <td class="col-md-1"><button type="submit" ng-click="confirmOrder(order)">Confirm</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
