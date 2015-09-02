@@ -2,7 +2,6 @@ package com.epages.microservice.handson.delivery;
 
 import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +12,15 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 @Component
-public class OrderStatusEventSubscriber extends AbstractEventSubscriber {
+public class BakingFinishedEventSubscriber extends AbstractEventSubscriber {
 
     private static final String BAKING_FINISHED_EVENT_TYPE = "BakingFinished";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderStatusEventSubscriber.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BakingFinishedEventSubscriber.class);
     private final DeliveryService deliveryService;
 
     @Autowired
-    public OrderStatusEventSubscriber(ObjectMapper objectMapper,
+    public BakingFinishedEventSubscriber(ObjectMapper objectMapper,
                                          DeliveryService deliveryService) {
         super(objectMapper, BAKING_FINISHED_EVENT_TYPE);
         this.deliveryService = deliveryService;
@@ -37,7 +36,7 @@ public class OrderStatusEventSubscriber extends AbstractEventSubscriber {
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("URI %s is invalid in event %s", orderUriString, event));
         }
-        deliveryService.deliver(orderUri);
+        deliveryService.startDelivery(orderUri);
 
     }
 

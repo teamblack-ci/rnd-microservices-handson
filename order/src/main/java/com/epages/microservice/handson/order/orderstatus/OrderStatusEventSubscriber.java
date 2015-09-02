@@ -1,5 +1,6 @@
 package com.epages.microservice.handson.order.orderstatus;
 
+import com.epages.microservice.handson.order.Order;
 import com.epages.microservice.handson.order.OrderService;
 import com.epages.microservice.handson.order.OrderStatus;
 import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
@@ -31,10 +32,20 @@ public abstract class OrderStatusEventSubscriber extends AbstractEventSubscriber
     protected void handleOwnType(Map<String, Object> event) {
         Map<String, Object> payload = (Map<String, Object>) getPayload(event);
         Long orderId = getOrderIdFromPayload(payload, event);
-        orderService.setOrderStatus(orderId, orderStatus);
+        Order order = orderService.getOrder(orderId)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found")));
+
+        enhanceOrder(order, payload);
+
+        order.setStatus(orderStatus);
+        orderService.update(order);
         LOGGER.info("Consumed {} event with payload '{}'", super.type, payload);
 
     }
+
+    protected void enhanceOrder(Order order, Map<String, Object> payload) {
+        //add logic in implementation if needed
+    };
 
     private Long getOrderIdFromPayload(Map<String, Object> payload, Map<String, Object> event) {
         String orderUriString = (String) payload.get("orderLink");

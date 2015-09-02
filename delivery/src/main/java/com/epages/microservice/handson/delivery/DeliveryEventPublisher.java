@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Component
 public class DeliveryEventPublisher {
-    private static final String DELIVERY_STARTED_EVENT_TYPE = "DeliveryStarted";
+    private static final String DELIVERY_ORDER_RECEIVED_EVENT_TYPE = "DeliveryOrderReceived";
     private static final String DELIVERED_EVENT_TYPE = "Delivered";
 
     private EventPublisher eventPublisher;
@@ -19,10 +19,11 @@ public class DeliveryEventPublisher {
         this.eventPublisher = eventPublisher;
     }
 
-    public void sendDeliveryStartedEvent(Order order) {
+    public void sendDeliveryOrderReceivedEvent(DeliveryOrderReceivedEvent event) {
         Map<String, Object> payloadMap = ImmutableMap.of(
-                "orderLink", order.getOrderLink());
-        eventPublisher.publish(DELIVERY_STARTED_EVENT_TYPE, payloadMap);
+                "orderLink", event.getOrderLink(),
+                "estimatedTimeOfDelivery", event.getEstimatedTimeOfDelivery());
+        eventPublisher.publish(DELIVERY_ORDER_RECEIVED_EVENT_TYPE, payloadMap);
     }
 
     public void sendDeliveredEvent(Order order) {

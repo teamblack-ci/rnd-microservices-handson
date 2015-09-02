@@ -3,6 +3,8 @@ package com.epages.microservice.handson.delivery;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 public class Address {
 
     private String firstname;
@@ -58,5 +60,13 @@ public class Address {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("Name", firstname + " " + lastname)
+                .add("Street", street)
+                .add("City", city).toString();
     }
 }

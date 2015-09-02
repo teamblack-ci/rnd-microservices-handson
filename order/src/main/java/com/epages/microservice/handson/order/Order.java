@@ -1,34 +1,20 @@
 package com.epages.microservice.handson.order;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.money.MonetaryAmount;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
 import com.google.common.base.Objects;
 import org.javamoney.moneta.Money;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.money.MonetaryAmount;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "PIZZA_ORDER")
@@ -50,6 +36,10 @@ public class Order implements Persistable<Long> {
     @CreatedDate
     @Column(name = "CREATED_AT", nullable = false, insertable = true, updatable = false)
     private LocalDateTime createdAt;
+
+    @Basic
+    @Column(name = "ETD", nullable = true)
+    private LocalDateTime estimatedTimeOfDelivery;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<LineItem> items = new ArrayList<>();
@@ -98,6 +88,14 @@ public class Order implements Persistable<Long> {
         this.createdAt = createdAt;
     }
 
+    public LocalDateTime getEstimatedTimeOfDelivery() {
+        return estimatedTimeOfDelivery;
+    }
+
+    public void setEstimatedTimeOfDelivery(LocalDateTime estimatedTimeOfDelivery) {
+        this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
+    }
+    
     public List<LineItem> getItems() {
         return items;
     }

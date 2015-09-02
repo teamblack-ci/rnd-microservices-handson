@@ -10,6 +10,7 @@ public class Order {
 
     @JsonIgnore
     private URI orderLink;
+
     private Address deliveryAddress;
     private String comment;
 

@@ -1,8 +1,12 @@
 package com.epages.microservice.handson.delivery;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.concurrent.Future;
 
 public interface DeliveryService {
 
-    public void deliver(URI orderUri);
+    public void startDelivery(URI orderUri);
+
+    public void scheduleDelivery(BakingOrderReceivedEvent event);
 }

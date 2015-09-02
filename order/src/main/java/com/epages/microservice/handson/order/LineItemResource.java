@@ -1,10 +1,9 @@
 package com.epages.microservice.handson.order;
 
-import java.net.URI;
+import org.springframework.hateoas.ResourceSupport;
 
 import javax.money.MonetaryAmount;
-
-import org.springframework.hateoas.ResourceSupport;
+import java.net.URI;
 
 public class LineItemResource extends ResourceSupport {
 

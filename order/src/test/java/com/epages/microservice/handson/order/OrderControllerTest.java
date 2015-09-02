@@ -91,7 +91,7 @@ public class OrderControllerTest {
         mockMvc = webAppContextSetup(context)
                 .build();
 
-        //mock the rest call made b< OrderServiceImpl to PizzaClientService
+        //mock the rest call made b< OrderServiceImpl to PizzaServiceClient
         mockServer = MockRestServiceServer.createServer(restTemplate);
         mockServer.expect(
                 requestTo("http://localhost/catalog/1")).
@@ -130,6 +130,7 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.status", is(order.getStatus().name())))
                 .andExpect(jsonPath("$.totalPrice", notNullValue()))
                 .andExpect(jsonPath("$.orderItems", hasSize(order.getItems().size())))
+                .andExpect(jsonPath("$.deliveryAddress.firstname", is(order.getDeliveryAddress().getFirstname())))
                 .andExpect(jsonPath("$._links.self.href",
                         is(entityLinks.linkForSingleResource(Order.class, order.getId()).toUri().toString())))
         ;

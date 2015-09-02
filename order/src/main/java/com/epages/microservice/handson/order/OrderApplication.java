@@ -1,8 +1,8 @@
 package com.epages.microservice.handson.order;
 
-import java.util.List;
-
 import com.epages.microservice.handson.shared.event.EventAutoConfiguration;
+import com.epages.microservice.handson.shared.json.JsonConfiguration;
+import com.epages.microservice.handson.shared.web.WebConfiguration;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,8 +17,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.epages.microservice.handson.shared.json.JsonConfiguration;
-import com.epages.microservice.handson.shared.web.WebConfiguration;
+import java.util.List;
 
 @SpringBootApplication
 @Import({ WebConfiguration.class, JsonConfiguration.class, EventAutoConfiguration.class })
