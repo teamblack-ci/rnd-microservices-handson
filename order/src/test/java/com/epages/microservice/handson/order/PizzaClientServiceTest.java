@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -32,7 +31,7 @@ public class PizzaClientServiceTest {
     private RestTemplate restTemplate;
 
     @Autowired
-    private PizzaClientService pizzaClientService;
+    private PizzaServiceClient pizzaClientService;
 
     private String pizzaSampleResponse = "{\n" +
             "  \"name\": \"Pizza Salami\",\n" +

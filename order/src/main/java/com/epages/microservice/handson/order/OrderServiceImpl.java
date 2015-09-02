@@ -1,7 +1,5 @@
 package com.epages.microservice.handson.order;
 
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,18 +7,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
-    private PizzaClientService pizzaClientService;
+    private PizzaServiceClient pizzaClientService;
     private OrderEventPublisher orderEventPublisher;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
-                            PizzaClientService pizzaClientService,
+                            PizzaServiceClient pizzaClientService,
                             OrderEventPublisher orderEventPublisher) {
         this.orderRepository = orderRepository;
         this.pizzaClientService = pizzaClientService;

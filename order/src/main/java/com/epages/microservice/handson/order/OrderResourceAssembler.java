@@ -1,9 +1,9 @@
 package com.epages.microservice.handson.order;
 
-import java.util.stream.Collectors;
-
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 public class OrderResourceAssembler extends ResourceAssemblerSupport<Order, OrderResource> {
@@ -21,7 +21,7 @@ public class OrderResourceAssembler extends ResourceAssemblerSupport<Order, Orde
                     //add links
                     return orderItemResource;
                 }).collect(Collectors.toList()));
-
+        orderResource.setDeliveryAddress(order.getDeliveryAddress());
         return orderResource;
     }
 
