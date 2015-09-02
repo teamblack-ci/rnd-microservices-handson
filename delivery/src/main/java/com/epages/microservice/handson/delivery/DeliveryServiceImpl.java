@@ -28,6 +28,8 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     @Async("deliveryThreadPoolTaskExecutor")
     public void deliver(URI orderUri) {
+
+        //retrieve the delivery address to be able to deliver
         final Order order = restTemplate.getForObject(orderUri, Order.class);
         LOGGER.info("Read order from URI {} - got {}", orderUri, order);
 
