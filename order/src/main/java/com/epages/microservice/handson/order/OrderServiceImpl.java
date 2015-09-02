@@ -61,4 +61,12 @@ public class OrderServiceImpl implements OrderService {
     public Page<Order> getAll(Pageable pageable) {
         return orderRepository.findAll(pageable);
     }
+
+    @Override
+    public void setOrderStatus(Long id, OrderStatus status) {
+        Order order = getOrder(id)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found")));
+        order.setStatus(status);
+        update(order);
+    }
 }

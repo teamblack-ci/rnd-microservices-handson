@@ -25,6 +25,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://repo.spring.io/snapshot" }
     maven { url "https://repo.spring.io/milestone" }
@@ -33,11 +34,21 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-amqp")
+    compile("org.springframework.amqp:spring-amqp:1.5.0.RC1")     // https://jira.spring.io/browse/AMQP-502
+    compile("org.springframework.amqp:spring-rabbit:1.5.0.RC1")   // https://jira.spring.io/browse/AMQP-502
+    compile("com.rabbitmq:http-client:1.0.0.M1")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-hateoas")
+
+    compile ("org.springframework.boot:spring-boot-starter-jetty")
+
+    compile("com.epages.microservice.handson:shared:0.+")
     runtime("com.h2database:h2")
-    runtime("org.springframework.data:spring-data-rest-hal-browser:2.4.0.RC1")
-    testCompile("org.springframework.boot:spring-boot-starter-test") 
+
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.assertj:assertj-core:3.1.0")
+    testRuntime("com.jayway.jsonpath:json-path:2.0.0")
+    testCompile("org.mockito:mockito-core:1.+")
 }
 
 

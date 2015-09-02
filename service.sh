@@ -8,11 +8,19 @@ docker-compose rm -fv
 
 echo "--> building microservice"
 cd catalog
-./gradlew clean bootRepackage
+./gradlew bootRepackage
 cd ..
 
 cd order
-./gradlew clean bootRepackage
+./gradlew bootRepackage
+cd ..
+
+cd bakery
+./gradlew bootRepackage
+cd ..
+
+cd delivery
+./gradlew bootRepackage
 cd ..
 echo "--> building new containers"
 docker-compose build --no-cache
