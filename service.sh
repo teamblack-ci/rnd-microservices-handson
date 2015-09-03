@@ -7,6 +7,10 @@ echo "--> removing stopped containers"
 docker-compose rm -fv
 
 echo "--> building microservice"
+cd shared
+./gradlew install
+cd ..
+
 cd catalog
 ./gradlew bootRepackage
 cd ..

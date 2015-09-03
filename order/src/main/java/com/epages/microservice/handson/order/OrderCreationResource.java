@@ -6,16 +6,16 @@ import java.util.List;
 
 public class OrderCreationResource extends ResourceSupport {
 
-    private List<LineItemResource> items;
+    private List<LineItemResource> orderItems;
     private Address deliveryAddress;
     private String comment;
 
-    public List<LineItemResource> getItems() {
-        return items;
+    public List<LineItemResource> getOrderItems() {
+        return orderItems;
     }
 
-    public void setItems(List<LineItemResource> items) {
-        this.items = items;
+    public void setOrderItems(List<LineItemResource> orderItems) {
+        this.orderItems = orderItems;
     }
 
     public Address getDeliveryAddress() {
