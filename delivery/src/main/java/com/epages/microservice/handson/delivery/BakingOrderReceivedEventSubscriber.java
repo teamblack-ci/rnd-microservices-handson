@@ -1,24 +1,19 @@
 package com.epages.microservice.handson.delivery;
 
-import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.util.Map;
+import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class BakingOrderReceivedEventSubscriber extends AbstractEventSubscriber {
 
     private static final String BAKING_ORDER_RECEIVED_EVENT_TYPE = "BakingOrderReceived";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BakingOrderReceivedEventSubscriber.class);
     private final DeliveryService deliveryService;
 
     @Autowired

@@ -1,8 +1,5 @@
 package com.epages.microservice.handson.delivery;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
 import static com.google.common.base.MoreObjects.toStringHelper;
 
 public class Address {

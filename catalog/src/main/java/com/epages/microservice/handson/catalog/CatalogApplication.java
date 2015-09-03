@@ -1,7 +1,5 @@
 package com.epages.microservice.handson.catalog;
 
-import com.epages.microservice.handson.shared.json.JsonConfiguration;
-import com.epages.microservice.handson.shared.web.WebConfiguration;
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -11,7 +9,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
+
+import com.epages.microservice.handson.shared.json.JsonConfiguration;
+import com.epages.microservice.handson.shared.web.WebConfiguration;
 
 @SpringBootApplication
 @Import({ WebConfiguration.class, JsonConfiguration.class })

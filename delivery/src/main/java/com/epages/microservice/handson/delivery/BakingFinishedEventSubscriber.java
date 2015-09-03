@@ -1,22 +1,20 @@
 package com.epages.microservice.handson.delivery;
 
-import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class BakingFinishedEventSubscriber extends AbstractEventSubscriber {
 
     private static final String BAKING_FINISHED_EVENT_TYPE = "BakingFinished";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BakingFinishedEventSubscriber.class);
     private final DeliveryService deliveryService;
 
     @Autowired

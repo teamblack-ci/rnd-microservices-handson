@@ -1,5 +1,17 @@
 package com.epages.microservice.handson.delivery;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,17 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DeliveryApplication.class)
 @WebAppConfiguration
@@ -33,9 +34,6 @@ public class DeliveryOrderControllerTest {
 
     @Autowired
     private EntityLinks entityLinks;
-
-    @Autowired
-    private DeliveryOrderController deliveryOrderController;
 
     @Autowired
     private DeliveryOrderRepository deliveryOrderRepository;
@@ -96,7 +94,7 @@ public class DeliveryOrderControllerTest {
     public void should_get_order() throws Exception {
         givenDeliveryOrder();
 
-        whenOrderRetrievedByLink();
+        whenOrderRetrieved();
 
         orderResultActions
                 //.andDo(result -> System.out.println(result.getResponse().getContentAsString()))
