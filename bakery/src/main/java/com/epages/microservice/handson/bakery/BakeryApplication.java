@@ -45,4 +45,14 @@ public class BakeryApplication {
 
         return threadPoolTaskExecutor;
     }
+
+    @Bean
+    public RestTemplate restTemplate(List<HttpMessageConverter<?>> messageConverters) {
+        SimpleClientHttpRequestFactory httpRequestFactory = new SimpleClientHttpRequestFactory();
+        httpRequestFactory.setConnectTimeout(5000);
+        httpRequestFactory.setReadTimeout(5000);
+        RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
+        restTemplate.setMessageConverters(messageConverters);
+        return restTemplate;
+    }
 }

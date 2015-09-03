@@ -1,13 +1,20 @@
 package com.epages.microservice.handson.bakery;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 public class Order {
 
+    @JsonIgnore
     private URI orderLink;
 
-    private LocalDateTime estimatedTimeOfCompletion;
+    private List<LineItem> orderItems = new ArrayList<>();
 
     public URI getOrderLink() {
         return orderLink;
@@ -17,11 +24,16 @@ public class Order {
         this.orderLink = orderLink;
     }
 
-    public LocalDateTime getEstimatedTimeOfCompletion() {
-        return estimatedTimeOfCompletion;
+    public List<LineItem> getOrderItems() {
+        return orderItems;
     }
 
-    public void setEstimatedTimeOfCompletion(LocalDateTime estimatedTimeOfCompletion) {
-        this.estimatedTimeOfCompletion = estimatedTimeOfCompletion;
+    public void setOrderItems(List<LineItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper(this).add("orderItems", orderItems).toString();
     }
 }

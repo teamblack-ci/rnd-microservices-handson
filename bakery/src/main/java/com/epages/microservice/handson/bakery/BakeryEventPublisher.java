@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.util.Map;
 
 @Component
@@ -20,16 +21,16 @@ public class BakeryEventPublisher {
         this.eventPublisher = eventPublisher;
     }
 
-    public void sendBakingOrderReceivedEvent(Order order) {
+    public void sendBakingOrderReceivedEvent(BakeryOrderReceivedEvent event) {
         Map<String, Object> payloadMap = ImmutableMap.of(
-                "orderLink", order.getOrderLink(),
-                "estimatedTimeOfCompletion", order.getEstimatedTimeOfCompletion());
+                "orderLink", event.getOrderLink(),
+                "estimatedTimeOfCompletion", event.getEstimatedTimeOfCompletion());
         eventPublisher.publish(BAKING_ORDER_RECEIVED_EVENT_TYPE, payloadMap);
     }
 
-    public void sendBakingFinishedEvent(Order order) {
+    public void sendBakingFinishedEvent(URI orderLink) {
         Map<String, Object> payloadMap = ImmutableMap.of(
-                "orderLink", order.getOrderLink());
+                "orderLink", orderLink);
         eventPublisher.publish(BAKING_FINISHED_EVENT_TYPE, payloadMap);
     }
 
