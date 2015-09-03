@@ -31,6 +31,10 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
+configurations {
+    all*.exclude module: 'spring-boot-starter-tomcat'
+    all*.exclude module: 'aspectjrt'            // included in org.aspectj:aspectjweaver
+}
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-amqp")
@@ -51,7 +55,6 @@ dependencies {
     testRuntime("com.jayway.jsonpath:json-path:2.0.0")
     testCompile("org.mockito:mockito-core:1.+")
 }
-
 
 eclipse {
     classpath {
