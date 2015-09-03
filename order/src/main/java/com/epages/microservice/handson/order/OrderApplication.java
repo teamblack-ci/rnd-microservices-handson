@@ -49,8 +49,7 @@ public class OrderApplication {
 
     @Bean
     public ValidateAspect validateAspectBean(Validator validator) {
-    	return new ValidateAspect(validator);
+        return new ValidateAspect(validator);
     }
 
 }
-
