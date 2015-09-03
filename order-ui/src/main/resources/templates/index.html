@@ -114,16 +114,17 @@
         <div class="panel panel-default" style="margin-top: 10px;">
           <div class="panel-heading">Pizzas</div>
           <table class="table table-striped">
-              <thead><th></th><th>Name</th><th>Price</th></thead>
+              <thead><th></th><th>Name</th><th>Description</th><th>Price</th></thead>
               <tbody ng-repeat="pizza in pizzas">
               <tr>
                   <td class="col-md-2"><img src="{{pizza.imageUrl}}" style="width:100px"/></td>
                   <td class="col-md-2">{{pizza.name}}</td>
+                  <td class="col-md-4">{{pizza.description}}</td>
                   <td class="col-md-2">{{pizza.price}}</td>
                   <td class="col-md-2">
-                <span>
-                  <button type="submit" ng-click="addToCart(pizza)">Add to cart</button>
-                </span>
+                    <span>
+                      <button type="submit" ng-click="addToCart(pizza)">Add to cart</button>
+                    </span>
                   </td>
               </tr>
               </tbody>
