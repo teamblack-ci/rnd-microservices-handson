@@ -1,6 +1,11 @@
 package com.epages.microservice.handson.order.orderstatus;
 
-import com.epages.microservice.handson.order.*;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +17,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.epages.microservice.handson.order.Order;
+import com.epages.microservice.handson.order.OrderApplication;
+import com.epages.microservice.handson.order.OrderService;
+import com.epages.microservice.handson.order.OrderStatus;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = OrderApplication.class)
@@ -46,7 +50,7 @@ public class DeliveryOrderReceivedEventSubscriberTest {
     public static class MockConfiguration {
         @Bean
         public OrderService orderService() {
-            return mock(OrderServiceImpl.class);
+            return mock(OrderService.class);
         }
     }
 

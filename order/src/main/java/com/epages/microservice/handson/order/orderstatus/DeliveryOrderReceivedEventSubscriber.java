@@ -1,14 +1,15 @@
 package com.epages.microservice.handson.order.orderstatus;
 
+import java.time.LocalDateTime;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.epages.microservice.handson.order.Order;
 import com.epages.microservice.handson.order.OrderService;
 import com.epages.microservice.handson.order.OrderStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.Map;
 
 @Component
 public class DeliveryOrderReceivedEventSubscriber extends OrderStatusEventSubscriber {
@@ -22,7 +23,8 @@ public class DeliveryOrderReceivedEventSubscriber extends OrderStatusEventSubscr
 
     @Override
     protected void enhanceOrder(Order order, Map<String, Object> payload) {
-        LocalDateTime estimatedTimeOfDelivery = LocalDateTime.parse(((String) payload.get("estimatedTimeOfDelivery")));
+        final String payloadString = payload.get("estimatedTimeOfDelivery").toString();
+        LocalDateTime estimatedTimeOfDelivery = LocalDateTime.parse(payloadString);
         order.setEstimatedTimeOfDelivery(estimatedTimeOfDelivery);
     }
 }

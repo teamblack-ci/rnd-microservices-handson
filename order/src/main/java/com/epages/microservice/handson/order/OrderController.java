@@ -1,5 +1,11 @@
 package com.epages.microservice.handson.order;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+import java.net.URI;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,22 +14,20 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/orders")
 @ExposesResourceFor(Order.class)
 public class OrderController {
 
-    private OrderService orderService;
-    private EntityLinks entityLinks;
-    private OrderResourceAssembler orderResourceAssembler;
+    private final OrderService orderService;
+    private final EntityLinks entityLinks;
+    private final OrderResourceAssembler orderResourceAssembler;
 
     @Autowired
     public OrderController(OrderService orderService,

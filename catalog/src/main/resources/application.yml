@@ -8,5 +8,4 @@ server:
 logging:
   level:
     com.epages: INFO
-    feign: DEBUG
     org.springframework: INFO

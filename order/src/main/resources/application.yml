@@ -1,9 +1,6 @@
 spring:
   application:
     name: order
-  rabbitmq:
-    host: ${rabbitmq.host:rabbitmq}
-    port: ${rabbitmq.port:5672}
 
 server:
   port: ${port:8082}
@@ -11,5 +8,4 @@ server:
 logging:
   level:
     com.epages: INFO
-    feign: DEBUG
     org.springframework: INFO
