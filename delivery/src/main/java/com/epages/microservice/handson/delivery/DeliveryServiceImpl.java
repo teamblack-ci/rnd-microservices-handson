@@ -47,17 +47,18 @@ public class DeliveryServiceImpl implements DeliveryService {
         deliveryEventPublisher.sendDeliveredEvent(order);
     }
 
-    private void updateOrderState(DeliveryOrder deliveryOrder, DeliveryOrderState state) {
-        deliveryOrder.setDeliveryOrderState(state);
-        deliveryOrderRepository.save(deliveryOrder);
-    }
-
     @Override
     public void scheduleDelivery(BakingOrderReceivedEvent event) {
         saveDeliveryOrder(event);
 
         sendDeliveryOrderReceivedEvent(event);
     }
+
+    private void updateOrderState(DeliveryOrder deliveryOrder, DeliveryOrderState state) {
+        deliveryOrder.setDeliveryOrderState(state);
+        deliveryOrderRepository.save(deliveryOrder);
+    }
+
 
     private void saveDeliveryOrder(BakingOrderReceivedEvent event) {
         DeliveryOrder deliveryOrder = new DeliveryOrder();
