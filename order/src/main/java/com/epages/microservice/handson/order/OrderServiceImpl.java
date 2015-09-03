@@ -1,13 +1,13 @@
 package com.epages.microservice.handson.order;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -42,9 +42,9 @@ public class OrderServiceImpl implements OrderService {
 
     private void getLineItemPrices(Order order) {
         order.getItems().forEach(lineItem -> {
-                    Pizza pizza = pizzaClientService.getPizza(lineItem.getPizza());
-                    lineItem.setPrice(pizza.getPrice());
-                });
+            Pizza pizza = pizzaClientService.getPizza(lineItem.getPizza());
+            lineItem.setPrice(pizza.getPrice());
+        });
     }
 
     @Override
