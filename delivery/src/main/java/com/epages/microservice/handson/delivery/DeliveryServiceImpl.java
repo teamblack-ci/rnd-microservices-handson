@@ -19,10 +19,10 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeliveryServiceImpl.class);
 
-    @Value("${delivery.timeToDeliverInMillis:15000}")
+    @Value("${delivery.timeToDeliverInMillis:1}")
     private Long timeToDeliverInMillis;
 
-    @Value("${delivery.timeToPrepareDeliveryInMillis:5000}")
+    @Value("${delivery.timeToPrepareDeliveryInMillis:1}")
     private Long timeToPrepareDeliveryInMillis;
 
     private DeliveryEventPublisher deliveryEventPublisher;

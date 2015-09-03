@@ -6,6 +6,9 @@ spring:
     port: ${rabbitmq.port:5672}
 server:
   port: ${port:8084}
+delivery:
+  timeToDeliverInMillis: 15000
+  timeToPrepareDeliveryInMillis: 5000
 
 logging:
   level:

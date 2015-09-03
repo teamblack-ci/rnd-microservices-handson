@@ -14,6 +14,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -40,6 +41,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DeliveryApplication.class)
 @ActiveProfiles("DeliveryServiceTest")
+@WebIntegrationTest(value = {"delivery.timeToPrepareDeliveryInMillis:1", "delivery.timeToDeliverInMillis:1"})
 public class DeliveryServiceTest {
 
     @Autowired
