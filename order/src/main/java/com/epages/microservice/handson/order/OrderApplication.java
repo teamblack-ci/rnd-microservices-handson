@@ -22,4 +22,5 @@ public class OrderApplication {
     public ValidateAspect validateAspectBean(Validator validator) {
         return new ValidateAspect(validator);
     }
+
 }

@@ -15,12 +15,12 @@ public class OrderServiceImpl implements OrderService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     private final OrderRepository orderRepository;
-    private final PizzaServiceClient pizzaClientService;
+    private final PizzaClientService pizzaClientService;
     private final OrderEventPublisher orderEventPublisher;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
-                            PizzaServiceClient pizzaClientService,
+                            PizzaClientService pizzaClientService,
                             OrderEventPublisher orderEventPublisher) {
         this.orderRepository = orderRepository;
         this.pizzaClientService = pizzaClientService;
