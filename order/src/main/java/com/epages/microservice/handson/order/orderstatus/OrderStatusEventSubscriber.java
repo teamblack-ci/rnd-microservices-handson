@@ -1,22 +1,23 @@
 package com.epages.microservice.handson.order.orderstatus;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epages.microservice.handson.order.Order;
 import com.epages.microservice.handson.order.OrderService;
 import com.epages.microservice.handson.order.OrderStatus;
 import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
 
 public abstract class OrderStatusEventSubscriber extends AbstractEventSubscriber {
 
-    private OrderService orderService;
-    private OrderStatus orderStatus;
+    private final OrderService orderService;
+    private final OrderStatus orderStatus;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderStatusEventSubscriber.class);
 
@@ -33,7 +34,7 @@ public abstract class OrderStatusEventSubscriber extends AbstractEventSubscriber
         Map<String, Object> payload = getPayload(event);
         Long orderId = getOrderIdFromPayload(payload, event);
         Order order = orderService.getOrder(orderId)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found")));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found", orderId)));
 
         enhanceOrder(order, payload);
 

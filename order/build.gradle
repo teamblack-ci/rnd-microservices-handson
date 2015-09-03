@@ -34,6 +34,7 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-amqp")
+    // obsoluete due to dependency on shared?
     compile("org.springframework.amqp:spring-amqp:1.5.0.RC1")     // https://jira.spring.io/browse/AMQP-502
     compile("org.springframework.amqp:spring-rabbit:1.5.0.RC1")   // https://jira.spring.io/browse/AMQP-502
     compile("com.rabbitmq:http-client:1.0.0.M1")

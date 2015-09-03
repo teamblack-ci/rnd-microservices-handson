@@ -1,5 +1,7 @@
 package com.epages.microservice.handson.order;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,16 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private OrderRepository orderRepository;
-    private PizzaServiceClient pizzaClientService;
-    private OrderEventPublisher orderEventPublisher;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
+
+    private final OrderRepository orderRepository;
+    private final PizzaServiceClient pizzaClientService;
+    private final OrderEventPublisher orderEventPublisher;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void setOrderStatus(Long id, OrderStatus status) {
         Order order = getOrder(id)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found")));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found", id)));
         order.setStatus(status);
         update(order);
     }

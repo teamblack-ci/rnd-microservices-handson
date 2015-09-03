@@ -1,15 +1,18 @@
 package com.epages.microservice.handson.shared.event;
 
-import static com.epages.microservice.handson.shared.event.EventPublisher.*;
-import com.epages.microservice.handson.shared.json.JsonMapTypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.messaging.handler.annotation.Payload;
+import static com.epages.microservice.handson.shared.event.EventPublisher.EVENT_PAYLOAD;
+import static com.epages.microservice.handson.shared.event.EventPublisher.EVENT_TYPE;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.messaging.handler.annotation.Payload;
+
+import com.epages.microservice.handson.shared.json.JsonMapTypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractEventSubscriber {
 

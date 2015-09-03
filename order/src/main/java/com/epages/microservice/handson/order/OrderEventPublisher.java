@@ -1,18 +1,19 @@
 package com.epages.microservice.handson.order;
 
-import com.epages.microservice.handson.shared.event.EventPublisher;
-import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import com.epages.microservice.handson.shared.event.EventPublisher;
+import com.google.common.collect.ImmutableMap;
 
 @Component
 public class OrderEventPublisher {
 
-    private EventPublisher eventPublisher;
-    private EntityLinks entityLinks;
+    private final EventPublisher eventPublisher;
+    private final EntityLinks entityLinks;
 
     private static final String ORDER_CREATED_EVENT_TYPE = "OrderCreated";
 
