@@ -1,7 +1,6 @@
 package com.epages.microservice.handson.order.orderstatus;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 import org.slf4j.Logger;
