@@ -32,6 +32,7 @@ public class PizzaInitializer implements InitializingBean {
         pizzaRepository.save(salamiPizza());
         pizzaRepository.save(hawaiiPizza());
         pizzaRepository.save(peanutButterPizza());
+        pizzaRepository.save(tonnoPizza());
     }
 
     private Pizza hawaiiPizza() {
@@ -57,7 +58,7 @@ public class PizzaInitializer implements InitializingBean {
 
     private Pizza peanutButterPizza() {
         Pizza pizza = new Pizza();
-        pizza.setName("Chicken Pizza with Peanut Butter Sauce");
+        pizza.setName("Chicken Pizza with Peanut Butter");
         pizza.setDescription("Take this!");
         pizza.setToppings(Sets.newHashSet(CHEESE, PEANUT_BUTTER, CHICKEN));
         pizza.setImageUrl("http://ilovepeanutbutter.com/recipes/wp-content/uploads/2012/04/Thai-Pizza-Beauty-Shot-2.jpg");
@@ -68,12 +69,10 @@ public class PizzaInitializer implements InitializingBean {
     private Pizza tonnoPizza() {
         Pizza pizza = new Pizza();
         pizza.setName("Pizza Tonno");
-        pizza.setDescription("Tuno - no dolphins - promise!");
+        pizza.setDescription("Tunu - no dolphins - promise!");
         pizza.setToppings(Sets.newHashSet(CHEESE, TUNA));
         pizza.setImageUrl("http://restaurantblume.ch/wp-content/uploads/2013/04/pizza-tonno.png");
         pizza.setPrice(Money.of(8.90, "EUR"));
         return pizza;
     }
-
-    http://restaurantblume.ch/wp-content/uploads/2013/04/pizza-tonno.png
 }
