@@ -48,6 +48,9 @@ public class DeliveryServiceTest {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private DeliveryOrderRepository deliveryOrderRepository;
+
     @Captor
     private ArgumentCaptor<DeliveryOrderReceivedEvent> deliveryEventCaptor;
 
@@ -80,6 +83,9 @@ public class DeliveryServiceTest {
 
     private BakingOrderReceivedEvent bakingOrderReceivedEvent;
 
+    private DeliveryOrder deliveryOrder;
+    private CompletableFuture<Boolean> asyncInteractionFuture;
+
     @Configuration
     @Profile("DeliveryServiceTest")
     public static class MockConfiguration {
@@ -97,8 +103,9 @@ public class DeliveryServiceTest {
     }
 
     @After
-    public void resetMocks() {
+    public void reset() {
         Mockito.reset(deliveryEventPublisher);
+        deliveryOrderRepository.deleteAll();
     }
 
     @BeforeClass
@@ -117,13 +124,37 @@ public class DeliveryServiceTest {
         //then
         verify(deliveryEventPublisher).sendDeliveryOrderReceivedEvent(deliveryEventCaptor.capture());
         then(deliveryEventCaptor.getValue().getEstimatedTimeOfDelivery()).isEqualTo(bakingOrderReceivedEvent.getEstimatedTimeOfCompletion().plusNanos(2_000_000));
+        then(deliveryOrderRepository.getDeliveryOrderByOrderLink(bakingOrderReceivedEvent.getOrderLink())).isNotNull();
+        then(deliveryOrderRepository.getDeliveryOrderByOrderLink(bakingOrderReceivedEvent.getOrderLink()).getDeliveryOrderState()).isEqualTo(DeliveryOrderState.QUEUED);
     }
 
     @Test
     public void should_deliver() throws URISyntaxException, InterruptedException, TimeoutException, ExecutionException {
-        URI orderUri = new URI("http://localhost/orders/1");
-        CompletableFuture<Boolean> asyncInteractionFuture = new CompletableFuture<>();
-        mockServer.expect(requestTo(orderUri)).andRespond(withSuccess(orderResponse, MediaType.APPLICATION_JSON));
+        givenDeliveryOrder();
+
+        givenMockedEventPublisher();
+
+        whenDeliveryStarted();
+
+        //then
+        verify(deliveryEventPublisher).sendDeliveredEvent(orderCaptor.capture());
+        then(orderCaptor.getValue().getOrderLink()).isEqualTo(deliveryOrder.getOrderLink());
+        then(deliveryOrder.getDeliveryOrderState()).isEqualTo(DeliveryOrderState.DONE);
+
+    }
+
+    private void whenDeliveryStarted() throws InterruptedException, ExecutionException, TimeoutException {
+        deliveryService.startDelivery(deliveryOrder.getOrderLink());
+
+        //wait for async interaction until timeout
+        asyncInteractionFuture.get(1000, TimeUnit.MILLISECONDS);
+
+        deliveryOrder = deliveryOrderRepository.findOne(deliveryOrder.getId());
+    }
+
+    private void givenMockedEventPublisher() {
+        asyncInteractionFuture = new CompletableFuture<>();
+        mockServer.expect(requestTo(deliveryOrder.getOrderLink())).andRespond(withSuccess(orderResponse, MediaType.APPLICATION_JSON));
 
         //complete the future when deliveryEventPublisher.sendDeliveredEvent is called
         doAnswer(new Answer() {
@@ -134,14 +165,15 @@ public class DeliveryServiceTest {
             }
         }).when(deliveryEventPublisher).sendDeliveredEvent(any());
 
-        deliveryService.startDelivery(orderUri);
 
-        //wait for async interaction until timeout
-        asyncInteractionFuture.get(1000, TimeUnit.MILLISECONDS);
+    }
 
-        verify(deliveryEventPublisher).sendDeliveredEvent(orderCaptor.capture());
-        then(orderCaptor.getValue().getOrderLink()).isEqualTo(orderUri);
-
+    private void givenDeliveryOrder() throws URISyntaxException {
+        URI orderUri = new URI("http://localhost/orders/1");
+        deliveryOrder = new DeliveryOrder();
+        deliveryOrder.setDeliveryOrderState(DeliveryOrderState.QUEUED);
+        deliveryOrder.setOrderLink(orderUri);
+        deliveryOrder = deliveryOrderRepository.save(deliveryOrder);
     }
 
     private void givenBakingOrderReceivedEvent() throws URISyntaxException {
