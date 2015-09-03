@@ -2,7 +2,6 @@ package com.epages.microservice.handson.catalog;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.money.MonetaryAmount;
@@ -13,9 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
-
-import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "PIZZA")
@@ -43,12 +39,6 @@ public class Pizza {
 
     @ElementCollection
     private Set<Topping> toppings;
-
-    @Version
-    private Integer version;
-
-    @LastModifiedDate
-    private LocalDateTime lastModified;
 
     public Long getId() {
         return id;

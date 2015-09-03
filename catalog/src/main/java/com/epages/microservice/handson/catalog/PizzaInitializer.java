@@ -1,13 +1,20 @@
 package com.epages.microservice.handson.catalog;
 
-import static com.epages.microservice.handson.catalog.Topping.*;
-import com.google.common.collect.Sets;
+import static com.epages.microservice.handson.catalog.Topping.CHEESE;
+import static com.epages.microservice.handson.catalog.Topping.HAM;
+import static com.epages.microservice.handson.catalog.Topping.PINEAPPLE;
+import static com.epages.microservice.handson.catalog.Topping.SALAMI;
+
 import org.javamoney.moneta.Money;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Sets;
 
 @Component
-public class PizzaInitializer  {
+public class PizzaInitializer implements InitializingBean {
 
     private final PizzaRepository pizzaRepository;
 
@@ -16,7 +23,9 @@ public class PizzaInitializer  {
         this.pizzaRepository = pizzaRepository;
     }
 
-    public void init() {
+    @Override
+    @Transactional
+    public void afterPropertiesSet() {
         pizzaRepository.save(salamiPizza());
         pizzaRepository.save(hawaiiPizza());
     }
