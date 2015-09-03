@@ -8,9 +8,9 @@ order:
     - PROFILE=prod
     - RABBITMQ_HOST=rabbitmq
     - RABBITMQ_PORT=5672
-    - PORT=8081
+    - PORT=8082
   ports:
-   - "8081:8081"
+   - "8082:8082"
 
 catalog:
   build: catalog
@@ -22,9 +22,9 @@ catalog:
     - PROFILE=prod
     - RABBITMQ_HOST=rabbitmq
     - RABBITMQ_PORT=5672
-    - PORT=8082
+    - PORT=8081
   ports:
-   - "8082:8082"
+   - "8081:8081"
 
 bakery:
   build: bakery
