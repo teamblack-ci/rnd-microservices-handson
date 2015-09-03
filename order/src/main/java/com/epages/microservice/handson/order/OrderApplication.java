@@ -1,8 +1,9 @@
 package com.epages.microservice.handson.order;
 
-import com.epages.microservice.handson.shared.event.EventAutoConfiguration;
-import com.epages.microservice.handson.shared.json.JsonConfiguration;
-import com.epages.microservice.handson.shared.web.WebConfiguration;
+import java.util.List;
+
+import javax.validation.Validator;
+
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +18,10 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import com.epages.microservice.handson.shared.event.EventAutoConfiguration;
+import com.epages.microservice.handson.shared.json.JsonConfiguration;
+import com.epages.microservice.handson.shared.validation.ValidateAspect;
+import com.epages.microservice.handson.shared.web.WebConfiguration;
 
 @SpringBootApplication
 @Import({ WebConfiguration.class, JsonConfiguration.class, EventAutoConfiguration.class })
@@ -42,4 +46,10 @@ public class OrderApplication {
         restTemplate.setMessageConverters(messageConverters);
         return restTemplate;
     }
+
+    @Bean
+    public ValidateAspect validateAspectBean(Validator validator) {
+        return new ValidateAspect(validator);
+    }
+
 }

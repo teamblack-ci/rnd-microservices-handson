@@ -94,7 +94,7 @@ public class DeliveryOrderControllerTest {
     public void should_get_order() throws Exception {
         givenDeliveryOrder();
 
-        whenOrderRetrievedByLink();
+        whenOrderRetrieved();
 
         orderResultActions
                 //.andDo(result -> System.out.println(result.getResponse().getContentAsString()))

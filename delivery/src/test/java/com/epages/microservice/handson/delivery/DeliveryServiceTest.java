@@ -162,7 +162,7 @@ public class DeliveryServiceTest {
         mockServer.expect(requestTo(deliveryOrder.getOrderLink())).andRespond(withSuccess(orderResponse, MediaType.APPLICATION_JSON));
 
         //complete the future when deliveryEventPublisher.sendDeliveredEvent is called
-        doAnswer(new Answer() {
+        doAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 asyncInteractionFuture.complete(true);
