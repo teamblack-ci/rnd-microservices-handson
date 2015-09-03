@@ -1,18 +1,13 @@
 package com.epages.microservice.handson.delivery;
 
-import com.google.common.primitives.Longs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
@@ -27,29 +22,52 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     private DeliveryEventPublisher deliveryEventPublisher;
     private OrderServiceClient orderServiceClient;
+    private DeliveryOrderRepository deliveryOrderRepository;
 
     @Autowired
     public DeliveryServiceImpl(DeliveryEventPublisher deliveryEventPublisher,
-                               OrderServiceClient orderServiceClient) {
+                               OrderServiceClient orderServiceClient,
+                               DeliveryOrderRepository deliveryOrderRepository) {
         this.deliveryEventPublisher = deliveryEventPublisher;
         this.orderServiceClient = orderServiceClient;
+        this.deliveryOrderRepository = deliveryOrderRepository;
     }
     @Override
     @Async("deliveryThreadPoolTaskExecutor")
     public void startDelivery(URI orderUri) {
+        DeliveryOrder deliveryOrder = deliveryOrderRepository.getDeliveryOrderByOrderLink(orderUri);
+        updateOrderState(deliveryOrder, DeliveryOrderState.IN_PROGRESS);
 
         //retrieve the delivery address to be able to startDelivery
         Order order = orderServiceClient.getOrder(orderUri);
-        LOGGER.info("Read order from URI {} - got {}", orderUri, order);
-        order.setOrderLink(orderUri);
 
-        deliver(order);
+        doTheDeliveryWork(order);
+
+        updateOrderState(deliveryOrder, DeliveryOrderState.DONE);
+        deliveryEventPublisher.sendDeliveredEvent(order);
+    }
+
+    private void updateOrderState(DeliveryOrder deliveryOrder, DeliveryOrderState state) {
+        deliveryOrder.setDeliveryOrderState(state);
+        deliveryOrderRepository.save(deliveryOrder);
     }
 
     @Override
     public void scheduleDelivery(BakingOrderReceivedEvent event) {
-        //estimate deliver completion
+        saveDeliveryOrder(event);
 
+        sendDeliveryOrderReceivedEvent(event);
+    }
+
+    private void saveDeliveryOrder(BakingOrderReceivedEvent event) {
+        DeliveryOrder deliveryOrder = new DeliveryOrder();
+        deliveryOrder.setOrderLink(event.getOrderLink());
+        deliveryOrder.setDeliveryOrderState(DeliveryOrderState.QUEUED);
+
+        deliveryOrderRepository.save(deliveryOrder);
+    }
+
+    private void sendDeliveryOrderReceivedEvent(BakingOrderReceivedEvent event) {
         Long deliveryTime = timeToPrepareDeliveryInMillis + timeToDeliverInMillis;
 
         DeliveryOrderReceivedEvent deliveryOrderReceivedEvent = new DeliveryOrderReceivedEvent();
@@ -60,16 +78,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         deliveryEventPublisher.sendDeliveryOrderReceivedEvent(deliveryOrderReceivedEvent);
     }
 
-    public void deliver(Order order) {
+    private void doTheDeliveryWork(Order order) {
         LOGGER.info("Working hard to deliver order {} to address {}", order.getOrderLink(), order.getDeliveryAddress());
-        delay(timeToDeliverInMillis);
-
-        deliveryEventPublisher.sendDeliveredEvent(order);
-    }
-
-    private void delay(Long millis) {
         try {
-            Thread.sleep(millis);
+            Thread.sleep(timeToDeliverInMillis);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
