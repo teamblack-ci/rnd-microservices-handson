@@ -1,4 +1,4 @@
-package com.epages.microservice.handson.bakery;
+package com.epages.microservice.handson.delivery.order;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

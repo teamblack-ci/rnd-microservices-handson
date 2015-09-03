@@ -30,7 +30,7 @@ public abstract class OrderStatusEventSubscriber extends AbstractEventSubscriber
 
     @Override
     protected void handleOwnType(Map<String, Object> event) {
-        Map<String, Object> payload = (Map<String, Object>) getPayload(event);
+        Map<String, Object> payload = getPayload(event);
         Long orderId = getOrderIdFromPayload(payload, event);
         Order order = orderService.getOrder(orderId)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found")));
@@ -53,13 +53,7 @@ public abstract class OrderStatusEventSubscriber extends AbstractEventSubscriber
             LOGGER.error("Event {} does not contain an orderLink", event);
             throw new IllegalArgumentException(String.format("Event %s does not contain an orderLink", event));
         }
-        URI orderUri;
-        try {
-            orderUri = new URI(orderUriString);
-        } catch (URISyntaxException e) {
-            LOGGER.error("orderLink {} is not a valid URI in event {}", orderUriString, event);
-            throw new IllegalArgumentException(String.format("orderLink %s is not a valid URI in event %s", orderUriString, event));
-        }
+        URI orderUri = URI.create(orderUriString);
 
         String[] pathItems = orderUri.getPath().split("/");
         if (pathItems != null && pathItems.length > 1) {

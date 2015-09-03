@@ -1,5 +1,6 @@
-package com.epages.microservice.handson.bakery;
+package com.epages.microservice.handson.bakery.order;
 
+import com.epages.microservice.handson.bakery.BakeryService;
 import com.epages.microservice.handson.shared.event.AbstractEventSubscriber;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -7,9 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 @Component
@@ -29,14 +28,9 @@ public class OrderCreatedEventSubscriber extends AbstractEventSubscriber {
 
     @Override
     protected void handleOwnType(Map<String, Object> event) {
-        final Map<String, Object> payload = (Map<String, Object>) getPayload(event);
+        final Map<String, Object> payload = getPayload(event);
         String orderUriString = (String) payload.get("orderLink");
-        URI orderUri = null;
-        try {
-            orderUri = new URI(orderUriString);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("URI %s is invalid in event %s", orderUriString, event));
-        }
+        URI orderUri = URI.create(orderUriString);
         bakeryService.acknowledgeOrder(orderUri);
         bakeryService.bakeOrder(orderUri);
         LOGGER.info("Consumed {} event with payload '{}' of class '{}'", ORDER_CREATED_EVENT_TYPE, payload, payload.getClass());

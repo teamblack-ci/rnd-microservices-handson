@@ -1,8 +1,8 @@
 package com.epages.microservice.handson.bakery;
 
+import com.epages.microservice.handson.bakery.order.Order;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -12,6 +12,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -36,11 +37,11 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = BakeryApplication.class)
 @ActiveProfiles("BakeryServiceTest")
+@WebIntegrationTest("bakery.timeToBakePizzaInMillis:1")
 public class BakeryServiceTest {
 
     @Autowired
     private BakeryEventPublisher bakeryEventPublisher;
-
 
     @Autowired
     private BakeryService bakeryService;
@@ -107,11 +108,6 @@ public class BakeryServiceTest {
         bakeryOrderRepository.deleteAll();
     }
 
-    @BeforeClass
-    public static void configureDeliveryService() {
-        System.setProperty("bakery.timeToBakePizzaInMillis", "1");
-    }
-
     @Test
     public void should_acknowledge_order_and_send_event() throws URISyntaxException {
         givenOrderReceivedEvent();
@@ -123,16 +119,13 @@ public class BakeryServiceTest {
         verify(bakeryEventPublisher).sendBakingOrderReceivedEvent(bakeryEventCaptor.capture());
         then(bakeryEventCaptor.getValue().getEstimatedTimeOfCompletion()).isNotNull();
         then(bakeryEventCaptor.getValue().getOrderLink()).isEqualTo(orderUri);
-        then(bakeryOrderRepository.getBakeryOrderByOrderLink(orderUri)).isNotNull();
-        then(bakeryOrderRepository.getBakeryOrderByOrderLink(orderUri).getBakeryOrderState()).isEqualTo(BakeryOrderState.QUEUED);
+        then(bakeryOrderRepository.findByOrderLink(orderUri)).isNotNull();
+        then(bakeryOrderRepository.findByOrderLink(orderUri).getBakeryOrderState()).isEqualTo(BakeryOrderState.QUEUED);
     }
-
-
 
     @Test
     public void should_bake() throws URISyntaxException, InterruptedException, TimeoutException, ExecutionException {
         givenBakeryOrder();
-
         givenMockedEventPublisher();
 
         whenBakingStarted();

@@ -1,8 +1,9 @@
-package com.epages.microservice.handson.delivery;
+package com.epages.microservice.handson.delivery.order;
+
+import com.epages.microservice.handson.delivery.Address;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.net.URI;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 public class Order {

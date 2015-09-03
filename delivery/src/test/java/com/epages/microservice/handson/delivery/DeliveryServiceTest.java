@@ -1,21 +1,6 @@
 package com.epages.microservice.handson.delivery;
 
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
+import com.epages.microservice.handson.delivery.order.Order;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -29,6 +14,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -38,9 +24,24 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DeliveryApplication.class)
 @ActiveProfiles("DeliveryServiceTest")
+@WebIntegrationTest(value = {"delivery.timeToPrepareDeliveryInMillis:1", "delivery.timeToDeliverInMillis:1"})
 public class DeliveryServiceTest {
 
     @Autowired
@@ -128,8 +129,8 @@ public class DeliveryServiceTest {
         //then
         verify(deliveryEventPublisher).sendDeliveryOrderReceivedEvent(deliveryEventCaptor.capture());
         then(deliveryEventCaptor.getValue().getEstimatedTimeOfDelivery()).isEqualTo(bakingOrderReceivedEvent.getEstimatedTimeOfCompletion().plusNanos(2_000_000));
-        then(deliveryOrderRepository.getDeliveryOrderByOrderLink(bakingOrderReceivedEvent.getOrderLink())).isNotNull();
-        then(deliveryOrderRepository.getDeliveryOrderByOrderLink(bakingOrderReceivedEvent.getOrderLink()).getDeliveryOrderState()).isEqualTo(DeliveryOrderState.QUEUED);
+        then(deliveryOrderRepository.findByOrderLink(bakingOrderReceivedEvent.getOrderLink())).isNotNull();
+        then(deliveryOrderRepository.findByOrderLink(bakingOrderReceivedEvent.getOrderLink()).getDeliveryOrderState()).isEqualTo(DeliveryOrderState.QUEUED);
     }
 
     @Test

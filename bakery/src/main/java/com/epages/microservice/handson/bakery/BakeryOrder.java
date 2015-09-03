@@ -9,6 +9,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "BAKERY_ORDER")
+
 public class BakeryOrder {
 
     @Id
@@ -17,6 +18,7 @@ public class BakeryOrder {
     @JsonIgnore
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private URI orderLink;
 
     @Enumerated(EnumType.STRING)

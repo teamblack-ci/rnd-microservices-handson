@@ -48,8 +48,8 @@ public abstract class AbstractEventSubscriber {
         return type.equals(getType(event));
     }
 
-    protected Object getPayload(Map<String, Object> event) {
-        return event.get(EVENT_PAYLOAD);
+    protected Map<String, Object> getPayload(Map<String, Object> event) {
+        return (Map<String, Object>) event.get(EVENT_PAYLOAD);
     }
 
     protected void handleForeignType(Map<String, Object> event) {

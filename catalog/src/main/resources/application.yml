@@ -3,7 +3,7 @@ spring:
     name: catalog
 
 server:
-  port: ${port:8082}
+  port: ${port:8081}
 
 logging:
   level:

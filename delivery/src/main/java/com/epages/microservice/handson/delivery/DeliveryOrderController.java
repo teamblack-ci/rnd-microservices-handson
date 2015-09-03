@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -20,37 +21,36 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @ExposesResourceFor(DeliveryOrder.class)
 public class DeliveryOrderController {
 
-    private DeliveryOrderRepository deliveryOrderRepository;
+    private DeliveryService deliveryService;
 
     @Autowired
-    public DeliveryOrderController(DeliveryOrderRepository deliveryOrderRepository) {
-        this.deliveryOrderRepository = deliveryOrderRepository;
+    public DeliveryOrderController(DeliveryService deliveryService) {
+        this.deliveryService = deliveryService;
     }
 
     @RequestMapping(method = GET)
     public ResponseEntity<PagedResources<Resource<DeliveryOrder>>> getAll(Pageable pageable, PagedResourcesAssembler<DeliveryOrder> pagedResourcesAssembler) {
-        Page<DeliveryOrder> deliveryOrders = deliveryOrderRepository.findAll(pageable);
+        Page<DeliveryOrder> deliveryOrders = deliveryService.getAll(pageable);
 
         return ResponseEntity.ok(pagedResourcesAssembler.toResource(deliveryOrders));
     }
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Resource<DeliveryOrder>> get(@PathVariable Long id) {
-        DeliveryOrder deliveryOrder = deliveryOrderRepository.findOne(id);
-        if (deliveryOrder != null) {
-            return ResponseEntity.ok(new Resource<>(deliveryOrder));
-        } else {
-            return new ResponseEntity<Resource<DeliveryOrder>>(HttpStatus.NOT_FOUND);
-        }
+        Optional<DeliveryOrder> deliveryOrder = deliveryService.get(id);
+        return deliveryOrder
+                .map(Resource<DeliveryOrder>::new)
+                .map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
     }
 
     @RequestMapping(path = "/search/findByOrder", method = RequestMethod.GET)
     public ResponseEntity<Resource<DeliveryOrder>> getByOrderLink(@RequestParam URI orderLink) {
-        DeliveryOrder deliveryOrder = deliveryOrderRepository.getDeliveryOrderByOrderLink(orderLink);
-        if (deliveryOrder != null) {
-            return ResponseEntity.ok(new Resource<>(deliveryOrder));
-        } else {
-            return new ResponseEntity<Resource<DeliveryOrder>>(HttpStatus.NOT_FOUND);
-        }
+        Optional<DeliveryOrder> deliveryOrder = deliveryService.getByOrderLink(orderLink);
+        return deliveryOrder
+                .map(Resource<DeliveryOrder>::new)
+                .map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 }

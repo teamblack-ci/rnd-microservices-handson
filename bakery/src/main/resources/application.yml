@@ -6,7 +6,8 @@ spring:
     port: ${rabbitmq.port:5672}
 server:
   port: ${port:8083}
-
+bakery:
+  timeToBakePizzaInMillis: 15000
 logging:
   level:
     com.epages: INFO
