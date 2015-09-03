@@ -15,29 +15,43 @@
     <script src="http://cdn.jsdelivr.net/underscorejs/1.5.1/underscore-min.js"></script>
     <script type="text/javascript" th:inline="javascript">
   var orderApiBackendHost = /*[[${orderApiBackendHost}]]*/ 'http://192.168.59.103';
-  var catalogApiBackendHost = /*[[${catalogApiBackendHost}]]*/ 'http://localhost:8082';
+  var catalogApiBackendHost = /*[[${catalogApiBackendHost}]]*/ 'http://localhost:8082/';
   var ang = angular.module('greenfield',["restangular"]);
 
   // Inject Restangular into your controller
   ang.controller("MainCtrl",["Restangular","$scope",function(Restangular,$scope){
-    Restangular.setBaseUrl(catalogApiBackendHost);
+    //Restangular.setBaseUrl(catalogApiBackendHost);
     Restangular.setFullResponse(true);
-    var pizzaResource = Restangular.all('pizzas');
+    var pizzaResource = Restangular.allUrl("pizzas", catalogApiBackendHost + "pizzas");
 
     $scope.cart = {};
+
+    $scope.newOrder = new Object();
+    $scope.newOrder.orderItems = {};
+
     pizzaResource.getList().then(function(pizzas) {
+      console.log(pizzas);
       $scope.pizzas = pizzas.data._embedded.pizzas;
     });
 
     $scope.addToCart = function(pizza) {
       var pizzaUri = pizza._links.self.href;
-      console.log(pizzaUri);
+
+      var cartItem = {};
+
       if (pizzaUri in $scope.cart) {
-        $scope.cart[pizzaUri] = $scope.cart[pizzaUri] + 1;
+        cartItem = $scope.cart[pizzaUri];
+        cartItem.count = cartItem.count + 1;
       } else {
-        $scope.cart[pizzaUri] = 1;
+
+        cartItem.count = 1;
+        cartItem.pizza = pizza;
+
+        $scope.cart[pizzaUri] = cartItem;
       }
-      console.log($scope.cart);
+
+      var price = cartItem.pizza.price.slice(4);
+      cartItem.price = price * cartItem.count;
     };
   }]);
 
@@ -82,41 +96,71 @@
 </nav>
 
 <!-- Page Content -->
-<div class="container" style="margin-top:100px;">
-    <div id="pizzas">
-        <h3>Pizzas</h3>
-        <table class="table table-striped">
-            <thead><th></th><th>Name</th><th>Price</th></thead>
-            <tbody ng-repeat="pizza in pizzas">
-            <tr>
-                <td class="col-md-2"><img src="{{pizza.imageUrl}}" style="width:100px"/></td>
-                <td class="col-md-2">{{pizza.name}}</td>
-                <td class="col-md-2">{{pizza.price}}</td>
-                <td class="col-md-2">
-              <span>
-                <button type="submit" ng-click="addToCart(pizza)">Add to cart</button>
-              </span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<div class="container">
+    <div class="row"  style="margin-top:150px;">
+      <div id="pizzas" class="panel panel-default col-xs-6">
+          <div class="panel-heading">Pizzas</div>
+          <table class="table table-striped">
+              <thead><th></th><th>Name</th><th>Price</th></thead>
+              <tbody ng-repeat="pizza in pizzas">
+              <tr>
+                  <td class="col-md-2"><img src="{{pizza.imageUrl}}" style="width:100px"/></td>
+                  <td class="col-md-2">{{pizza.name}}</td>
+                  <td class="col-md-2">{{pizza.price}}</td>
+                  <td class="col-md-2">
+                <span>
+                  <button type="submit" ng-click="addToCart(pizza)">Add to cart</button>
+                </span>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+      </div>
+      <div id="cart" class="panel panel-default col-xs-5 col-md-offset-1">
+          <div class="panel-heading">Cart</div>
+          <table class="table table-striped">
+              <thead><th>Pizza</th><th>Amount</th><th>Price</th><th></th></thead>
+              <tbody ng-repeat="item in cart">
+              <tr>
+                  <td class="col-md-4">{{item.pizza.name}}</td>
+                  <td class="col-md-2">{{item.count}}</td>
+                  <td class="col-md-2">{{item.price}}</td>
+              </tr>
+              </tbody>
+          </table>
+          <div class="panel panel-default" style="margin-top: 10px;">
+
+            <div class="panel-heading">Delivery Address</div>
+            <div class="panel-body">
+              <form>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Firstname" ng-model="newOrder.deliveryAddress.firstname" />
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Lastname" ng-model="newOrder.deliveryAddress.lastname" />
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Street" ng-model="newOrder.deliveryAddress.street" />
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="City" ng-model="newOrder.deliveryAddress.city" />
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Postal Code" ng-model="newOrder.deliveryAddress.postalCode" />
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Telefone" ng-model="newOrder.deliveryAddress.telephone" />
+                </div>
+
+                <button type="submit" ng-click="postOrder()">Place Order</button>
+              </form>
+            </div>
+          </div>
+
+      </div>
     </div>
 
-    <div id="cart">
-        <h3>Cart</h3>
-        <table class="table table-striped">
-            <thead><th>Cart Id</th><th>Shop Id</th><th>Line Items</th><th></th></thead>
-            <tbody ng-repeat="item in cart">
-            <tr ng-class="{success: createdCartId==cart.cartId, info: activeCart.cartId==cart.cartId}">
-                <td class="col-md-4">{{carts[item].name}}</td>
-                <td class="col-md-4">{{item}}</td>
-                <td class="col-md-2"></td>
-                <td class="col-md-1"><button type="submit" ng-click="setActiveCart(cart)">Set Active</button></td>
-                <td class="col-md-1"><button type="submit" ng-click="order(cart)">Place Order</button></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+
 </div>
 
 </body>
