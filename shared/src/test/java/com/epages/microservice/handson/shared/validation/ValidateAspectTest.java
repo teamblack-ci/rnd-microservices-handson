@@ -8,19 +8,30 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+import com.epages.microservice.handson.shared.event.EventAutoConfiguration;
+import com.epages.microservice.handson.shared.jpa.JpaAutoConfiguration;
+import com.epages.microservice.handson.shared.json.JsonAutoConfiguration;
+import com.epages.microservice.handson.shared.web.WebAutoConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ValidateAspectTest.ValidationTestApp.class)
 public class ValidateAspectTest {
 
-    @SpringBootApplication
-    @Import({ LocalValidatorFactoryBean.class })
+    @Configuration
+    @EnableAutoConfiguration(exclude = {
+            EventAutoConfiguration.class,
+            JpaAutoConfiguration.class,
+            JsonAutoConfiguration.class,
+            WebAutoConfiguration.class
+    })
+    @ComponentScan
     static class ValidationTestApp {
 
         public static void main(String[] args) {

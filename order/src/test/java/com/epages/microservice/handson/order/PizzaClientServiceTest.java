@@ -33,7 +33,7 @@ public class PizzaClientServiceTest {
     private RestTemplate restTemplate;
 
     @Autowired
-    private PizzaServiceClient pizzaClientService;
+    private PizzaClientService pizzaServiceClient;
 
     private String pizzaSampleResponse = "{\n" +
             "  \"name\": \"Pizza Salami\",\n" +
@@ -46,6 +46,7 @@ public class PizzaClientServiceTest {
     private MockRestServiceServer mockServer;
 
     private Pizza pizza;
+
     @Before
     public void setupContext(){
         mockServer = MockRestServiceServer.createServer(restTemplate);
@@ -89,7 +90,7 @@ public class PizzaClientServiceTest {
     }
 
     private void whenPizzaIsRetrieved() throws URISyntaxException {
-        pizza = pizzaClientService.getPizza(new URI("http://localhost/catalog/1"));
+        pizza = pizzaServiceClient.getPizza(new URI("http://localhost/catalog/1"));
     }
 
     private void givenExistingPizza() {

@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import com.epages.microservice.handson.shared.validation.Valid;
 
 @Service
-public class PizzaClientServiceImpl implements PizzaClientService {
+class PizzaClientServiceImpl implements PizzaClientService {
 
     private final RestTemplate restTemplate;
 

@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-public class DeliveryServiceImpl implements DeliveryService {
+class DeliveryServiceImpl implements DeliveryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeliveryServiceImpl.class);
 

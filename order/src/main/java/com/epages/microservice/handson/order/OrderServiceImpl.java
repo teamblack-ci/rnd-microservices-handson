@@ -10,17 +10,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderServiceImpl implements OrderService {
-
-    private OrderRepository orderRepository;
-    private PizzaServiceClient pizzaClientService;
-    private OrderEventPublisher orderEventPublisher;
+class OrderServiceImpl implements OrderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 
+    private final OrderRepository orderRepository;
+    private final PizzaClientService pizzaClientService;
+    private final OrderEventPublisher orderEventPublisher;
+
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
-                            PizzaServiceClient pizzaClientService,
+                            PizzaClientService pizzaClientService,
                             OrderEventPublisher orderEventPublisher) {
         this.orderRepository = orderRepository;
         this.pizzaClientService = pizzaClientService;
@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void setOrderStatus(Long id, OrderStatus status) {
         Order order = getOrder(id)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found")));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Order %s not found", id)));
         order.setStatus(status);
         update(order);
     }
