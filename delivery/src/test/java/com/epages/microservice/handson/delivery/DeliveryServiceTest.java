@@ -1,11 +1,15 @@
 package com.epages.microservice.handson.delivery;
 
+import com.epages.microservice.handson.delivery.order.Order;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +20,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
@@ -124,8 +127,8 @@ public class DeliveryServiceTest {
         //then
         verify(deliveryEventPublisher).sendDeliveryOrderReceivedEvent(deliveryEventCaptor.capture());
         then(deliveryEventCaptor.getValue().getEstimatedTimeOfDelivery()).isEqualTo(bakingOrderReceivedEvent.getEstimatedTimeOfCompletion().plusNanos(2_000_000));
-        then(deliveryOrderRepository.getDeliveryOrderByOrderLink(bakingOrderReceivedEvent.getOrderLink())).isNotNull();
-        then(deliveryOrderRepository.getDeliveryOrderByOrderLink(bakingOrderReceivedEvent.getOrderLink()).getDeliveryOrderState()).isEqualTo(DeliveryOrderState.QUEUED);
+        then(deliveryOrderRepository.findByOrderLink(bakingOrderReceivedEvent.getOrderLink())).isNotNull();
+        then(deliveryOrderRepository.findByOrderLink(bakingOrderReceivedEvent.getOrderLink()).getDeliveryOrderState()).isEqualTo(DeliveryOrderState.QUEUED);
     }
 
     @Test

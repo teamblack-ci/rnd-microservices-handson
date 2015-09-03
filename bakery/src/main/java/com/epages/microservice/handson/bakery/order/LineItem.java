@@ -1,4 +1,4 @@
-package com.epages.microservice.handson.bakery;
+package com.epages.microservice.handson.bakery.order;
 
 import java.net.URI;
 

@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Component
@@ -30,7 +27,7 @@ public class BakingOrderReceivedEventSubscriber extends AbstractEventSubscriber 
 
     @Override
     protected void handleOwnType(Map<String, Object> event) {
-        Map<String, Object> payload = (Map<String, Object>) getPayload(event);
+        Map<String, Object> payload = getPayload(event);
         BakingOrderReceivedEvent typedEvent = null;
         try {
             typedEvent = objectMapper.readValue(objectMapper.writeValueAsString(payload), BakingOrderReceivedEvent.class);

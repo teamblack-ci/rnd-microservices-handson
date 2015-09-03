@@ -1,14 +1,18 @@
 package com.epages.microservice.handson.delivery;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.concurrent.Future;
+import java.util.Optional;
 
 public interface DeliveryService {
 
-    public void startDelivery(URI orderUri);
+    Page<DeliveryOrder> getAll(Pageable pageable);
+    Optional<DeliveryOrder> get(Long id);
+    Optional<DeliveryOrder> getByOrderLink(URI orderLink);
 
-    public void scheduleDelivery(BakingOrderReceivedEvent event);
+    void startDelivery(URI orderUri);
+
+    void scheduleDelivery(BakingOrderReceivedEvent event);
 }

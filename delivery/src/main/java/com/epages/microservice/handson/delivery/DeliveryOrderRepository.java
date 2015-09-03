@@ -6,5 +6,5 @@ import java.net.URI;
 
 public interface DeliveryOrderRepository extends PagingAndSortingRepository<DeliveryOrder, Long> {
 
-    public DeliveryOrder getDeliveryOrderByOrderLink(URI orderLink);
+    DeliveryOrder findByOrderLink(URI orderLink);
 }

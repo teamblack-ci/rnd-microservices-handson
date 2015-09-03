@@ -3,7 +3,6 @@ package com.epages.microservice.handson.delivery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-
 import java.net.URI;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -19,6 +18,7 @@ public class DeliveryOrder {
     @JsonIgnore
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private URI orderLink;
 
     @Enumerated(EnumType.STRING)

@@ -23,8 +23,9 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DeliveryApplication.class)
@@ -33,9 +34,6 @@ public class DeliveryOrderControllerTest {
 
     @Autowired
     private EntityLinks entityLinks;
-
-    @Autowired
-    private DeliveryOrderController deliveryOrderController;
 
     @Autowired
     private DeliveryOrderRepository deliveryOrderRepository;

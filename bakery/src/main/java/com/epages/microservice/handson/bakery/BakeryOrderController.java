@@ -16,7 +16,7 @@ import java.net.URI;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping("/bakeryorders")
+@RequestMapping("/bakery-orders")
 @ExposesResourceFor(BakeryOrder.class)
 public class BakeryOrderController {
 
@@ -33,6 +33,7 @@ public class BakeryOrderController {
 
         return ResponseEntity.ok(pagedResourcesAssembler.toResource(bakeryOrders));
     }
+
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Resource<BakeryOrder>> get(@PathVariable Long id) {
         BakeryOrder bakeryOrder = bakeryOrderRepository.findOne(id);
@@ -45,7 +46,7 @@ public class BakeryOrderController {
 
     @RequestMapping(path = "/search/findByOrder", method = RequestMethod.GET)
     public ResponseEntity<Resource<BakeryOrder>> getByOrderLink(@RequestParam URI orderLink) {
-        BakeryOrder bakeryOrder = bakeryOrderRepository.getBakeryOrderByOrderLink(orderLink);
+        BakeryOrder bakeryOrder = bakeryOrderRepository.findByOrderLink(orderLink);
         if (bakeryOrder != null) {
             return ResponseEntity.ok(new Resource<>(bakeryOrder));
         } else {

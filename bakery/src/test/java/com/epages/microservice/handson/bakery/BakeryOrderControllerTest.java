@@ -36,9 +36,6 @@ public class BakeryOrderControllerTest {
     private EntityLinks entityLinks;
 
     @Autowired
-    private BakeryOrderController bakeryOrderController;
-
-    @Autowired
     private BakeryOrderRepository bakeryOrderRepository;
 
     @Autowired
@@ -72,7 +69,7 @@ public class BakeryOrderControllerTest {
         whenAllOrdersRetrieved();
 
         orderResultActions
-                //.andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$._embedded.bakeryOrders", hasSize(1)))
                 .andExpect(jsonPath("$._embedded.bakeryOrders[0].bakeryOrderState", is(BakeryOrderState.IN_PROGRESS.name())))
@@ -86,7 +83,7 @@ public class BakeryOrderControllerTest {
         whenOrderRetrievedByLink();
 
         orderResultActions
-                //.andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.orderLink", is(bakeryOrder.getOrderLink().toString())))
                 .andExpect(jsonPath("$.bakeryOrderState", is(bakeryOrder.getBakeryOrderState().name())))
@@ -97,10 +94,10 @@ public class BakeryOrderControllerTest {
     public void should_get_order() throws Exception {
         givenBakeryOrder();
 
-        whenOrderRetrievedByLink();
+        whenOrderRetrieved();
 
         orderResultActions
-                //.andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.orderLink", is(bakeryOrder.getOrderLink().toString())))
                 .andExpect(jsonPath("$.bakeryOrderState", is(bakeryOrder.getBakeryOrderState().name())))

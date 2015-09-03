@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 
 @Component
@@ -28,16 +27,10 @@ public class BakingFinishedEventSubscriber extends AbstractEventSubscriber {
 
     @Override
     protected void handleOwnType(Map<String, Object> event) {
-        Map<String, Object> payload = (Map<String, Object>) getPayload(event);
+        Map<String, Object> payload = getPayload(event);
         String orderUriString = (String) payload.get("orderLink");
-        URI orderUri = null;
-        try {
-            orderUri = new URI(orderUriString);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("URI %s is invalid in event %s", orderUriString, event));
-        }
+        URI orderUri = URI.create(orderUriString);
         deliveryService.startDelivery(orderUri);
-
     }
 
 }

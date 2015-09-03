@@ -1,5 +1,6 @@
 package com.epages.microservice.handson.delivery;
 
+import com.epages.microservice.handson.delivery.order.Order;
 import com.epages.microservice.handson.shared.event.EventPublisher;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
