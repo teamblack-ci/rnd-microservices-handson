@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping("/deliveryorders")
+@RequestMapping("/delivery-orders")
 @ExposesResourceFor(DeliveryOrder.class)
 public class DeliveryOrderController {
 

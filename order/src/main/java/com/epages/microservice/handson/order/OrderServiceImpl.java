@@ -42,9 +42,9 @@ class OrderServiceImpl implements OrderService {
 
     private void getLineItemPrices(Order order) {
         order.getItems().forEach(lineItem -> {
-                    Pizza pizza = pizzaClientService.getPizza(lineItem.getPizza());
-                    lineItem.setPrice(pizza.getPrice());
-                });
+            Pizza pizza = pizzaClientService.getPizza(lineItem.getPizza());
+            lineItem.setPrice(pizza.getPrice());
+        });
     }
 
     @Override

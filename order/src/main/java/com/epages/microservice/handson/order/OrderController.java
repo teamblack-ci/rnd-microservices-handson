@@ -14,6 +14,7 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/orders")
 @ExposesResourceFor(Order.class)
+@CrossOrigin
 public class OrderController {
 
     private final OrderService orderService;
@@ -55,17 +57,17 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> create(@RequestBody OrderCreationResource orderResource) {
+    public ResponseEntity<OrderResource> create(@RequestBody OrderCreationResource orderResource) {
 
         Order order = new Order();
         order.setDeliveryAddress(orderResource.getDeliveryAddress());
         order.setComment(orderResource.getComment());
-        order.setItems(orderResource.getItems().stream()
+        order.setItems(orderResource.getOrderItems().stream()
                 .map(LineItemResource::toEntity)
                 .collect(Collectors.toList()));
         order = orderService.create(order);
         URI location = entityLinks.linkForSingleResource(Order.class, order.getId()).toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(orderResourceAssembler.toResource(order));
 
     }
 
