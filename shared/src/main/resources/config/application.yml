@@ -1,4 +1,7 @@
 spring:
+  main:
+    show-banner: false
+
   profiles:
     active: ${profile:default}
 

@@ -8,10 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
-import com.epages.microservice.handson.shared.event.EventAutoConfiguration;
-import com.epages.microservice.handson.shared.json.JsonConfiguration;
 import com.epages.microservice.handson.shared.validation.ValidateAspect;
-import com.epages.microservice.handson.shared.web.WebConfiguration;
 
 @SpringBootApplication
 @EnableSpringDataWebSupport
@@ -22,9 +19,7 @@ public class OrderApplication {
     }
 
     @Bean
-    
     public ValidateAspect validateAspectBean(Validator validator) {
         return new ValidateAspect(validator);
     }
-
 }
