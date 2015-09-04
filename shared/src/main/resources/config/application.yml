@@ -1,6 +1,6 @@
 spring:
   main:
-    show-banner: false
+    show-banner: true
 
   profiles:
     active: ${profile:default}
