@@ -23,9 +23,9 @@ include::{snippets}/pizzas-list/http-response.adoc[]
 
 
 [[resources-pizza-get]]
-=== Retrieving an pizza
+=== Retrieving a pizza
 
-A `GET` request is used to retrieve the details of an pizza.
+A `GET` request is used to retrieve the details of a pizza.
 
 ==== Response structure
 
