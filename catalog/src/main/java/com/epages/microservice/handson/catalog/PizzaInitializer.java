@@ -69,7 +69,7 @@ public class PizzaInitializer implements InitializingBean {
     private Pizza tonnoPizza() {
         Pizza pizza = new Pizza();
         pizza.setName("Pizza Tonno");
-        pizza.setDescription("Tunu - no dolphins - promise!");
+        pizza.setDescription("Tuna - no dolphins - promise!");
         pizza.setToppings(Sets.newHashSet(CHEESE, TUNA));
         pizza.setImageUrl("http://restaurantblume.ch/wp-content/uploads/2013/04/pizza-tonno.png");
         pizza.setPrice(Money.of(8.90, "EUR"));
