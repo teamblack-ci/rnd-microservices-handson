@@ -57,7 +57,7 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> create(@RequestBody OrderCreationResource orderResource) {
+    public ResponseEntity<Void> create(@RequestBody OrderResource orderResource) {
 
         Order order = new Order();
         order.setDeliveryAddress(orderResource.getDeliveryAddress());
