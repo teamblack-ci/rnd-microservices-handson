@@ -19,3 +19,9 @@ gradle.properties
 .idea
 *.iml
 _ajdump
+
+**/node_modules/
+**/npm-debug.log
+
+**/build/
+**/build.tar.gz
