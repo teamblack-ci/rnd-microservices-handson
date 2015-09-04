@@ -13,28 +13,14 @@ RnD Day: Microservices Hands-On
   - sends asynchronous events over message bus
   - receives asynchronous events over message bus
 
-## TODOs
+# Use Case
 
-- Events as own data type
-
-- documentation
-- example use case(s)
-- dry-run of coding examples
-- email @ participants: notebook preparations
-  - JDK 8
-  - IDE (Eclipse)
-  - docker + docker-compose
-  - download Java libs and Docker images
-- prepare 2-8 workshop notebooks
+This project contains a collection of four microservices
+based on spring-boot, communicating via REST and AMQP.
+The "start-group-delivery" and "start-group-bakery"
+branches contain the starting points for implementing
+two services. The "ref" branch contains the reference
+implementations. Avoid peeking here without trying yourself
+first. :-)
 
 
-
-## Idea pool for example use cases
-
-- weather is boring :-)
-- ship traffic
-- ecommerce context
-- REST resources: GET is easier than POST
-- gamification aspects
-- warehouse stock management
- 

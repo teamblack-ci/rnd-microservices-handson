@@ -8,6 +8,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.restdocs.RestDocumentation.document;
+import static org.springframework.restdocs.RestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -97,6 +102,7 @@ public class OrderControllerTest {
     @Before
     public void setupContext(){
         mockMvc = webAppContextSetup(context)
+                .apply(documentationConfiguration().uris().withPort(80))
                 .build();
 
         //mock the rest call made b< OrderServiceImpl to PizzaServiceClient
@@ -117,6 +123,19 @@ public class OrderControllerTest {
         ordersResultAction
                 .andExpect(status().is(HttpStatus.CREATED.value()))
                 .andExpect(header().string(HttpHeaders.LOCATION, startsWith(ordersUri)))
+                .andDo(document("order-create", //
+                        requestFields( //
+                                fieldWithPath("comment").description("delivery comment"), //
+                                fieldWithPath("orderItems[].amount").description("how many pizzas do you eat today?"), //
+                                fieldWithPath("orderItems[].pizza").description("which pizza do you want?"), //
+                                fieldWithPath("deliveryAddress.firstname").description("Your first name"), //
+                                fieldWithPath("deliveryAddress.lastname").description("Your last name"), //
+                                fieldWithPath("deliveryAddress.street").description("Your stree"), //
+                                fieldWithPath("deliveryAddress.city").description("Your city"), //
+                                fieldWithPath("deliveryAddress.postalCode").description("Your postal code"), //
+                                fieldWithPath("deliveryAddress.telephone").description("Your telephone"), //
+                                fieldWithPath("deliveryAddress.email").description("Your email address").optional() //
+                )))
         ;
 
         verify(orderEventPublisher).sendOrderCreatedEvent(order);
@@ -136,7 +155,40 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.deliveryAddress.firstname", is(order.getDeliveryAddress().getFirstname())))
                 .andExpect(jsonPath("$._links.self.href",
                         is(entityLinks.linkForSingleResource(Order.class, order.getId()).toUri().toString())))
+
+                .andDo(document("order-get",
+                        responseFields(
+                                fieldWithPath("status").description("order status"),
+                                fieldWithPath("created").description("creation timestamp"),
+                                fieldWithPath("totalPrice").description("Total order amount"),
+                                fieldWithPath("orderItems[].pizza").description("ordered pizza"),
+                                fieldWithPath("orderItems[].amount").description("Amount of pizzas"),
+                                fieldWithPath("orderItems[].price").description("Price (Currency symbol and numeric value)"),
+                                fieldWithPath("deliveryAddress").description("delivery address as POSTed when <<resources-order-create,creating an Order>>"),
+                                fieldWithPath("_links").description("<<links,Links>> to other resources")
+                        ))) //
         ;
+    }
+
+    @Test
+    public void should_get_all_orders() throws Exception {
+        givenExistingOrder();
+
+        whenAllOrdersRetrieved();
+
+        ordersResultAction
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andDo(document("orders-list",
+                        responseFields(
+                                fieldWithPath("_embedded").description("Current page of <<resources-order-get,Orders>>"),
+                                fieldWithPath("page").description("<<paging,Paging>> information"),
+                                fieldWithPath("_links").description("<<links,Links>> to other resources")
+                ))) //
+        ;
+    }
+    private void whenAllOrdersRetrieved() throws Exception {
+        ordersResultAction = mockMvc.perform(get(ordersUri)
+                .accept(MediaTypes.HAL_JSON));
     }
 
     private void whenOrderRetrieved() throws Exception {
@@ -182,7 +234,9 @@ public class OrderControllerTest {
                 "street", "Somestreet 1",
                 "city", "Hamburg",
                 "telephone", "+49404321343"
-        )).put("postalCode", "22305").build();
+        )).put("postalCode", "22305") //
+          .put("email","your@email.address") //
+        .build();
 
         jsonInput = objectMapper.writeValueAsString(ImmutableMap.of(
                 "comment", "Some comment",

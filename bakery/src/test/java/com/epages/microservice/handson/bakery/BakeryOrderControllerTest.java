@@ -22,6 +22,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.restdocs.RestDocumentation.document;
+import static org.springframework.restdocs.RestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,9 +56,10 @@ public class BakeryOrderControllerTest {
     @Before
     public void setupContext() {
         mockMvc = webAppContextSetup(context)
+                .apply(documentationConfiguration().uris().withPort(80))
                 .build();
 
-        ordersUri = entityLinks.linkToCollectionResource(BakeryOrder.class).getHref();
+        ordersUri = entityLinks.linkToCollectionResource(BakeryOrder.class).expand().getHref();
     }
 
     @After
@@ -73,6 +78,11 @@ public class BakeryOrderControllerTest {
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$._embedded.bakeryOrders", hasSize(1)))
                 .andExpect(jsonPath("$._embedded.bakeryOrders[0].bakeryOrderState", is(BakeryOrderState.IN_PROGRESS.name())))
+                .andDo(document("bakeryorders-list", //
+                        responseFields(
+                                fieldWithPath("_links").description("<<links,Links>> to other resources"),
+                                fieldWithPath("_embedded").description("Embedded <<resources-bakeryorder-get,Bakery Orders>>")
+                )))
         ;
     }
 
@@ -101,6 +111,12 @@ public class BakeryOrderControllerTest {
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.orderLink", is(bakeryOrder.getOrderLink().toString())))
                 .andExpect(jsonPath("$.bakeryOrderState", is(bakeryOrder.getBakeryOrderState().name())))
+                .andDo(document("bakeryorder-get", //
+                        responseFields(
+                                fieldWithPath("orderLink").description("order link"),
+                                fieldWithPath("bakeryOrderState").description("bakery order status: " 
+                                + BakeryOrderState.QUEUED.toString() + ", " + BakeryOrderState.IN_PROGRESS.toString() + ", " + BakeryOrderState.DONE.toString())
+                    )))
         ;
     }
 

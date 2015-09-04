@@ -13,7 +13,7 @@ public class OrderServiceClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceClient.class);
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public OrderServiceClient(RestTemplate restTemplate) {
