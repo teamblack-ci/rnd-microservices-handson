@@ -4,9 +4,11 @@ import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import com.epages.microservice.handson.HandsOn;
+
 @Configuration
-@EntityScan(basePackages = "com.epages.microservice.handson")
-@EnableJpaRepositories(basePackages = "com.epages.microservice.handson")
+@EntityScan(basePackageClasses = HandsOn.class)
+@EnableJpaRepositories(basePackageClasses = HandsOn.class)
 public class JpaAutoConfiguration {
 
 }

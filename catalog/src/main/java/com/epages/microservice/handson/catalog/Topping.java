@@ -10,5 +10,6 @@ public enum Topping {
     TUNA,
     NUTELLA,
     PEANUT_BUTTER,
-    CHICKEN, VEGEMITE
+    CHICKEN,
+    VEGEMITE
 }
