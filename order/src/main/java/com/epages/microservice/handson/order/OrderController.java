@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/orders")
 @ExposesResourceFor(Order.class)
-@CrossOrigin
+@CrossOrigin(exposedHeaders = "Location", value = "*")
 public class OrderController {
 
     private final OrderService orderService;
@@ -57,7 +57,7 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<OrderResource> create(@RequestBody OrderCreationResource orderResource) {
+    public ResponseEntity<Void> create(@RequestBody OrderCreationResource orderResource) {
 
         Order order = new Order();
         order.setDeliveryAddress(orderResource.getDeliveryAddress());
@@ -67,7 +67,7 @@ public class OrderController {
                 .collect(Collectors.toList()));
         order = orderService.create(order);
         URI location = entityLinks.linkForSingleResource(Order.class, order.getId()).toUri();
-        return ResponseEntity.created(location).body(orderResourceAssembler.toResource(order));
+        return ResponseEntity.created(location).build();
 
     }
 
