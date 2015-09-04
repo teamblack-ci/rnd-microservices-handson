@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-rnd.shared.jpa.JpaAutoConfiguration,\
-rnd.shared.event.EventAutoConfiguration
