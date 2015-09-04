@@ -1,10 +1,10 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" ng-app="greenfield">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" ng-app="epizza">
 <head>
     <meta charset="utf8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Greenfield Demo Application</title>
+    <title>e.pizza Application</title>
     <script src="/webjars/jquery/1.11.3/jquery.min.js"></script>
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
@@ -15,7 +15,7 @@
     <script type="text/javascript" th:inline="javascript">
   var orderApiBackendHost = /*[[${orderApiBackendHost}]]*/ 'http://localhost:8082';
   var catalogApiBackendHost = /*[[${catalogApiBackendHost}]]*/ 'http://localhost:8081';
-  var ang = angular.module('greenfield',["restangular"]);
+  var ang = angular.module('epizza',["restangular"]);
 
   // Inject Restangular into your controller
   ang.controller("MainCtrl",["Restangular","$scope", "$interval",function(Restangular,$scope, $interval){

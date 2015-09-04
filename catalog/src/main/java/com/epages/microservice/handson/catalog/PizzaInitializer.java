@@ -41,7 +41,7 @@ public class PizzaInitializer implements InitializingBean {
         pizza.setName("Pizza Hawaii");
         pizza.setDescription("The exotic among the classics - Pizza Hawaii");
         pizza.setToppings(Sets.newHashSet(CHEESE, HAM, PINEAPPLE));
-        pizza.setImageUrl("http://www.heimfrost.de/_images/artikel/listenbilder/08834.jpg");
+        pizza.setImageUrl("/img/hawaii.jpg");
         pizza.setPrice(Money.of(9.90, "EUR"));
         return pizza;
     }
@@ -51,7 +51,7 @@ public class PizzaInitializer implements InitializingBean {
         pizza.setName("Pizza Salami");
         pizza.setDescription("The classic - Pizza Salami");
         pizza.setToppings(Sets.newHashSet(CHEESE, SALAMI));
-        pizza.setImageUrl("http://www.sardegna-rustica.de/images/pizza.jpg");
+        pizza.setImageUrl("/img/salami.jpg");
         pizza.setPrice(Money.of(8.90, "EUR"));
         return pizza;
     }
@@ -61,7 +61,7 @@ public class PizzaInitializer implements InitializingBean {
         pizza.setName("Chicken Pizza with Peanut Butter");
         pizza.setDescription("Take this!");
         pizza.setToppings(Sets.newHashSet(CHEESE, PEANUT_BUTTER, CHICKEN));
-        pizza.setImageUrl("http://ilovepeanutbutter.com/recipes/wp-content/uploads/2012/04/Thai-Pizza-Beauty-Shot-2.jpg");
+        pizza.setImageUrl("/img/chicken.jpg");
         pizza.setPrice(Money.of(10.90, "EUR"));
         return pizza;
     }
@@ -71,7 +71,7 @@ public class PizzaInitializer implements InitializingBean {
         pizza.setName("Pizza Tonno");
         pizza.setDescription("Tuna - no dolphins - promise!");
         pizza.setToppings(Sets.newHashSet(CHEESE, TUNA));
-        pizza.setImageUrl("http://restaurantblume.ch/wp-content/uploads/2013/04/pizza-tonno.png");
+        pizza.setImageUrl("/img/tonno.png");
         pizza.setPrice(Money.of(8.90, "EUR"));
         return pizza;
     }
