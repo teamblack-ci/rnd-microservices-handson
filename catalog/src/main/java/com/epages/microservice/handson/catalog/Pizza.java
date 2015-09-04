@@ -6,12 +6,18 @@ import java.util.Set;
 
 import javax.money.MonetaryAmount;
 import javax.persistence.Basic;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "PIZZA")
@@ -37,7 +43,13 @@ public class Pizza {
     @Column(name = "PRICE")
     private MonetaryAmount price;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "PIZZA_TOPPINGS",
+            joinColumns = @JoinColumn(name = "PIZZA_ID", nullable = false),
+            uniqueConstraints = @UniqueConstraint(name = "U_PIZZA_TOPPINGS_PIZZA_ID_TOPPING", columnNames = { "PIZZA_ID", "TOPPING" }))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TOPPING", length = 30, nullable = false)
     private Set<Topping> toppings;
 
     public Long getId() {
