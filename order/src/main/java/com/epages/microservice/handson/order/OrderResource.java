@@ -1,10 +1,12 @@
 package com.epages.microservice.handson.order;
 
-import org.springframework.hateoas.ResourceSupport;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.money.MonetaryAmount;
-import java.time.LocalDateTime;
-import java.util.List;
+
+import org.springframework.hateoas.ResourceSupport;
 
 public class OrderResource extends ResourceSupport {
 
@@ -12,12 +14,12 @@ public class OrderResource extends ResourceSupport {
     private LocalDateTime created;
     private LocalDateTime estimatedTimeOfDelivery;
     private MonetaryAmount totalPrice;
-    private List<LineItemResource> orderItems;
+    private List<LineItemResource> orderItems = new ArrayList<>();
 
     private Address deliveryAddress;
     public OrderResource(Order order) {
         this.status = order.getStatus();
-        this.created = order.getCreatedAt();
+        this.created = order.getOrderedAt();
         this.totalPrice = order.getTotalPrice();
         this.estimatedTimeOfDelivery = order.getEstimatedTimeOfDelivery();
     }

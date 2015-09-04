@@ -1,16 +1,27 @@
 package com.epages.microservice.handson.delivery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-import java.net.URI;
-
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.Serializable;
+import java.net.URI;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "DELIVERY_ORDER")
-public class DeliveryOrder {
+public class DeliveryOrder implements Serializable {
+
+    private static final long serialVersionUID = -3563967320907787156L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -18,10 +29,12 @@ public class DeliveryOrder {
     @JsonIgnore
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Basic
+    @Column(name = "ORDER_LINK", length = 255, unique = true, nullable = false)
     private URI orderLink;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "DELIVERY_ORDER_STATE", length = 30, nullable = false)
     private DeliveryOrderState deliveryOrderState;
 
     public Long getId() {
@@ -50,8 +63,12 @@ public class DeliveryOrder {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         DeliveryOrder that = (DeliveryOrder) o;
 
@@ -66,10 +83,6 @@ public class DeliveryOrder {
 
     @Override
     public String toString() {
-        return toStringHelper(this)
-                .add("id", id)
-                .add("orderLink", orderLink)
-                .add("deliveryOrderState", deliveryOrderState)
-                .toString();
+        return toStringHelper(this).add("id", id).add("orderLink", orderLink).add("deliveryOrderState", deliveryOrderState).toString();
     }
 }

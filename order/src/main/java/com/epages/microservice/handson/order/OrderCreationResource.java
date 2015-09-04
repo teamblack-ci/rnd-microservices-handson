@@ -1,12 +1,13 @@
 package com.epages.microservice.handson.order;
 
-import org.springframework.hateoas.ResourceSupport;
-
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.hateoas.ResourceSupport;
 
 public class OrderCreationResource extends ResourceSupport {
 
-    private List<LineItemResource> orderItems;
+    private List<LineItemResource> orderItems = new ArrayList<>();
     private Address deliveryAddress;
     private String comment;
 

@@ -1,6 +1,6 @@
 package com.epages.microservice.handson.order;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 }

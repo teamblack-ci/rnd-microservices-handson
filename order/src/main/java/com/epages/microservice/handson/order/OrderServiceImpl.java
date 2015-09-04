@@ -1,5 +1,6 @@
 package com.epages.microservice.handson.order;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -8,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRED)
 class OrderServiceImpl implements OrderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
@@ -33,7 +37,8 @@ class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("order does not have items");
         }
         getLineItemPrices(order);
-        Order savedOrder = orderRepository.save(order);
+        order.setOrderedAt(LocalDateTime.now());
+        Order savedOrder = orderRepository.saveAndFlush(order);
 
         orderEventPublisher.sendOrderCreatedEvent(savedOrder);
         LOGGER.info("order created {}", order);

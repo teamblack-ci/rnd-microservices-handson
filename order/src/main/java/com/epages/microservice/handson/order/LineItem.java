@@ -3,39 +3,47 @@ package com.epages.microservice.handson.order;
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.Serializable;
 import java.net.URI;
-import java.time.LocalDateTime;
 
 import javax.money.MonetaryAmount;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
-
-import org.springframework.data.annotation.LastModifiedDate;
 
 import com.google.common.base.Objects;
 
 @Entity
 @Table(name = "LINE_ITEM")
-public class LineItem {
+public class LineItem implements Serializable {
+
+    private static final long serialVersionUID = 3902307439011218750L;
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Version
-    private Integer version;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "ORDER_ID", nullable = false)
+    private Order order;
 
-    @LastModifiedDate
-    private LocalDateTime modified;
-
+    @Basic
+    @Column(name = "PIZZA", length = 255, nullable = false)
     private URI pizza;
 
+    @Basic
+    @Column(name = "AMOUNT", nullable = false)
     private Integer amount;
 
+    @Basic
+    @Column(name = "PRICE", length = 20, nullable = false)
     private MonetaryAmount price;
 
     public Long getId() {
@@ -44,6 +52,14 @@ public class LineItem {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public URI getPizza() {
@@ -89,10 +105,6 @@ public class LineItem {
 
     @Override
     public String toString() {
-        return toStringHelper(this)
-                .add("id", id)
-                .add("pizza", pizza)
-                .add("amount", amount)
-                .toString();
+        return toStringHelper(this).add("id", id).add("pizza", pizza).add("amount", amount).toString();
     }
 }
