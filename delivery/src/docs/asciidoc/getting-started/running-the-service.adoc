@@ -17,7 +17,7 @@ Once the clone is complete, you're ready to get the service up and running:
 
 [source,bash]
 ----
-$ cd rnd-microservices-handson/order
+$ cd rnd-microservices-handson/delivery
 $ ./gradlew bootRun
 ----
 
