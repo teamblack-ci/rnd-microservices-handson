@@ -29,9 +29,7 @@ public class BakeryEventPublisher {
     }
 
     public void sendBakingFinishedEvent(URI orderLink) {
-        Map<String, Object> payloadMap = ImmutableMap.of(
-                "orderLink", orderLink);
-        eventPublisher.publish(BAKING_FINISHED_EVENT_TYPE, payloadMap);
+        //TODO construct an event payload and use the eventPublisher to send event with type BAKING_FINISHED_EVENT_TYPE
     }
 
 

@@ -48,11 +48,12 @@ public class BakeryOrderController {
 
     @RequestMapping(path = "/search/findByOrder", method = RequestMethod.GET)
     public ResponseEntity<Resource<BakeryOrder>> getByOrderLink(@RequestParam URI orderLink) {
-        Optional<BakeryOrder> bakeryOrder = bakeryService.getByOrderLink(orderLink);
-        return bakeryOrder
-                .map(Resource<BakeryOrder>::new)
-                .map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        /*TODO implement the BakeryServiceImpl method bakeryService.getByOrderLink(orderLink)
+            and call it here
+            afterwards transform the result into an ResponseEntity
+            HINT: look at the get method above to find out how to construct resources and ResponseEntity
+         */
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }

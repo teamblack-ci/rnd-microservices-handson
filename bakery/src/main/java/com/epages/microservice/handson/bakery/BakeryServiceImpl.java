@@ -49,7 +49,9 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Override
     public Optional<BakeryOrder> getByOrderLink(URI orderLink) {
-        return Optional.ofNullable(bakeryOrderRepository.findByOrderLink(orderLink));
+        /*TODO after you have implemented the finder in BakeryOrderRepository to find an order by link
+         call this method here and transform the result to an Optional */
+        return Optional.empty();
     }
 
     @Override
@@ -61,11 +63,7 @@ public class BakeryServiceImpl implements BakeryService {
 
     @Async("bakeryThreadPoolTaskExecutor")
     public void bakeOrder(URI orderLink) {
-        BakeryOrder bakeryOrder = bakeryOrderRepository.findByOrderLink(orderLink);
-        if (bakeryOrder == null) {
-            LOGGER.warn("Could not find BakeryOrder with uri {}", orderLink);
-            return;
-        }
+        BakeryOrder bakeryOrder = getByOrderLink(orderLink).orElseThrow(() -> new IllegalArgumentException(String.format("order with uri %s not found", orderLink)));;
         updateOrderState(bakeryOrder, BakeryOrderState.IN_PROGRESS);
 
         //retrieve the order to get the pizzas to bake
