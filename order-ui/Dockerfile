@@ -2,8 +2,8 @@
 FROM jensfischerhh/docker-java:8u45-jre
 
 RUN mkdir /app
-ADD build/libs/order-0.0.1-SNAPSHOT.jar /app/
+ADD build/libs/order-ui-0.0.1-SNAPSHOT.jar /app/
 
 WORKDIR /app
 
-ENTRYPOINT ["java","-jar","/app/order-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/app/order-ui-0.0.1-SNAPSHOT.jar"]
