@@ -50,13 +50,15 @@ class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public Optional<DeliveryOrder> getByOrderLink(URI orderLink) {
-        return Optional.ofNullable(deliveryOrderRepository.findByOrderLink(orderLink));
+        /*TODO after you have implemented the finder in DeliveryOrderRepository to find an order by link
+         call this method here and transform the result to an Optional */
+        return Optional.empty();
     }
 
     @Override
     @Async("deliveryThreadPoolTaskExecutor")
     public void startDelivery(URI orderUri) {
-        DeliveryOrder deliveryOrder = deliveryOrderRepository.findByOrderLink(orderUri);
+        DeliveryOrder deliveryOrder = getByOrderLink(orderUri).orElseThrow(() -> new IllegalArgumentException(String.format("order with uri %s not found", orderUri)));
         updateOrderState(deliveryOrder, DeliveryOrderState.IN_PROGRESS);
 
         //retrieve the delivery address to be able to startDelivery

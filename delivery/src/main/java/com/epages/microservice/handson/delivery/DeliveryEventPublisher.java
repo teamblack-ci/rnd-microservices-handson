@@ -28,8 +28,6 @@ public class DeliveryEventPublisher {
     }
 
     public void sendDeliveredEvent(Order order) {
-        Map<String, Object> payloadMap = ImmutableMap.of(
-                "orderLink", order.getOrderLink());
-        eventPublisher.publish(DELIVERED_EVENT_TYPE, payloadMap);
+        //TODO construct an event payload and use the eventPublisher to send event with type DELIVERED_EVENT_TYPE
     }
 }

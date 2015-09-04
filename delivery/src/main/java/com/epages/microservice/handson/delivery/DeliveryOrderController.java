@@ -32,6 +32,7 @@ public class DeliveryOrderController {
 
         return ResponseEntity.ok(pagedResourcesAssembler.toResource(deliveryOrders));
     }
+
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Resource<DeliveryOrder>> get(@PathVariable Long id) {
         Optional<DeliveryOrder> deliveryOrder = deliveryService.get(id);
@@ -39,16 +40,15 @@ public class DeliveryOrderController {
                 .map(Resource<DeliveryOrder>::new)
                 .map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-
     }
 
     @RequestMapping(path = "/search/findByOrder", method = RequestMethod.GET)
-    public ResponseEntity<Resource<DeliveryOrder>> getByOrderLink(@RequestParam URI orderLink) {
-        Optional<DeliveryOrder> deliveryOrder = deliveryService.getByOrderLink(orderLink);
-        return deliveryOrder
-                .map(Resource<DeliveryOrder>::new)
-                .map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+     public ResponseEntity<Resource<DeliveryOrder>> getByOrderLink(@RequestParam URI orderLink) {
+        /*TODO implement the DeliveryServiceImpl method deliveryService.getByOrderLink(orderLink)
+            and call it here
+            afterwards transform the result into an ResponseEntity
+            HINT: look at the get method above to find out how to construct resources and ResponseEntity
+         */
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 }
