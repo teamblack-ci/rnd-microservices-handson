@@ -26,6 +26,11 @@ cd ..
 cd delivery
 ./gradlew bootRepackage
 cd ..
+
+cd order-ui
+./gradlew bootRepackage
+cd ..
+
 echo "--> building new containers"
 docker-compose build --no-cache
 
