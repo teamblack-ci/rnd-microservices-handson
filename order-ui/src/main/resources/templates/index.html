@@ -67,7 +67,7 @@
         }
         Restangular.setFullResponse(true);
         orderResource.post($scope.newOrder).then(function(response) {
-          var location = response.data._links.self.href;
+          var location = response.headers("Location");
           currentOrderResource = Restangular.oneUrl("order", location);
           $scope.currentOrder = currentOrderResource.get().then(function(order) {
             $scope.currentOrder = order.data;

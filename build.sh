@@ -29,3 +29,9 @@ echo "#############################################"
 echo "# building 'delivery'                       #"
 echo "#############################################"
 ./delivery/gradlew -p delivery clean check bootRepackage
+
+echo
+echo "#############################################"
+echo "# building 'order-ui'                       #"
+echo "#############################################"
+./order-ui/gradlew -p order-ui clean check bootRepackage
