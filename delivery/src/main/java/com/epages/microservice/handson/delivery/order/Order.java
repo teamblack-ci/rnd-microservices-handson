@@ -2,13 +2,20 @@ package com.epages.microservice.handson.delivery.order;
 
 import com.epages.microservice.handson.delivery.Address;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.io.IOException;
 import java.net.URI;
 
 
 public class Order {
 
-    @JsonIgnore
     private URI orderLink;
 
     private Address deliveryAddress;
@@ -18,6 +25,8 @@ public class Order {
         return orderLink;
     }
 
+    @JsonProperty("_links")
+    @JsonDeserialize(using = OrderLinkDeserializer.class)
     public void setOrderLink(URI orderLink) {
         this.orderLink = orderLink;
     }
@@ -36,5 +45,16 @@ public class Order {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    static class OrderLinkDeserializer extends JsonDeserializer<URI> {
+        @Override
+        public URI deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+            final ObjectCodec codec = jsonParser.getCodec();
+            final JsonNode links = codec.readTree(jsonParser);
+            final JsonNode self = links.get("self");
+            final JsonNode href = self.get("href");
+            return URI.create(href.textValue());
+        }
     }
 }

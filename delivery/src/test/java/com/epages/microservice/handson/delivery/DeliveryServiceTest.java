@@ -83,7 +83,7 @@ public class DeliveryServiceTest {
             "  },\n" +
             "  \"_links\": {\n" +
             "    \"self\": {\n" +
-            "      \"href\": \"http://192.168.99.100:8081/orders/1\",\n" +
+            "      \"href\": \"http://localhost/orders/1\",\n" +
             "      \"templated\": false\n" +
             "    }\n" +
             "  }\n" +
