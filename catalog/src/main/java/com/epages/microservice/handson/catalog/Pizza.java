@@ -87,5 +87,4 @@ public class Pizza {
     public void setToppings(Set<Topping> toppings) {
         this.toppings = toppings;
     }
-
 }

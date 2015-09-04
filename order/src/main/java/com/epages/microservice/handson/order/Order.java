@@ -3,17 +3,20 @@ package com.epages.microservice.handson.order;
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.money.MonetaryAmount;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -21,20 +24,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import org.javamoney.moneta.Money;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.google.common.base.Objects;
 
 @Entity
 @Table(name = "PIZZA_ORDER")
-@EntityListeners(AuditingEntityListener.class)
-public class Order implements Persistable<Long> {
+public class Order implements Serializable {
 
     private static final long serialVersionUID = -3578518882422353855L;
 
@@ -43,28 +40,20 @@ public class Order implements Persistable<Long> {
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Version
-    private Integer version;
-
     @Basic
-    @LastModifiedDate
-    @Column(name = "LAST_MODIFIED_AT", nullable = false, insertable = true, updatable = true)
-    private LocalDateTime lastModifiedAt;
+    @Column(name = "ORDERED_AT", nullable = false)
+    private LocalDateTime orderedAt;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "STATUS", nullable = false)
+    @Column(name = "STATUS", length = 30, nullable = false)
     private OrderStatus status = OrderStatus.NEW;
-
-    @Basic
-    @CreatedDate
-    @Column(name = "CREATED_AT", nullable = false, insertable = true, updatable = false)
-    private LocalDateTime createdAt;
 
     @Basic
     @Column(name = "ETD", nullable = true)
     private LocalDateTime estimatedTimeOfDelivery;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Access(AccessType.FIELD)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<LineItem> items = new ArrayList<>();
 
     @Basic
@@ -76,11 +65,6 @@ public class Order implements Persistable<Long> {
 
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public boolean isNew() {
-        return getId() == null;
     }
 
     public void setId(Long id) {
@@ -95,14 +79,6 @@ public class Order implements Persistable<Long> {
         this.status = status;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getEstimatedTimeOfDelivery() {
         return estimatedTimeOfDelivery;
     }
@@ -110,13 +86,19 @@ public class Order implements Persistable<Long> {
     public void setEstimatedTimeOfDelivery(LocalDateTime estimatedTimeOfDelivery) {
         this.estimatedTimeOfDelivery = estimatedTimeOfDelivery;
     }
-    
+
     public List<LineItem> getItems() {
-        return items;
+        return Collections.unmodifiableList(items);
     }
 
     public void setItems(List<LineItem> items) {
-        this.items = items;
+        this.items.clear();
+        items.forEach(this::addItem);
+    }
+
+    public void addItem(LineItem item) {
+        item.setOrder(this);
+        this.items.add(item);
     }
 
     public String getComment() {
@@ -136,9 +118,8 @@ public class Order implements Persistable<Long> {
     }
 
     public MonetaryAmount getTotalPrice() {
-        return items.stream()
-                .map(lineItem -> lineItem.getPrice().multiply(lineItem.getAmount()))
-                .reduce(MonetaryAmount::add).orElse(Money.of(0.0, "EUR"));
+        return items.stream().map(lineItem -> lineItem.getPrice().multiply(lineItem.getAmount())).reduce(MonetaryAmount::add)
+                .orElse(Money.of(0.0, "EUR"));
     }
 
     @Override
@@ -161,5 +142,13 @@ public class Order implements Persistable<Long> {
     @Override
     public String toString() {
         return toStringHelper(this).add("id", id).add("items", items).toString();
+    }
+
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
+    }
+
+    public void setOrderedAt(LocalDateTime orderedAt) {
+        this.orderedAt = orderedAt;
     }
 }

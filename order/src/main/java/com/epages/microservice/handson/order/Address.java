@@ -1,10 +1,14 @@
 package com.epages.microservice.handson.order;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Address {
+public class Address implements Serializable {
+
+    private static final long serialVersionUID = 2667019347732732455L;
 
     @Column(name = "FIRSTNAME", length = 255, nullable = false)
     private String firstname;
