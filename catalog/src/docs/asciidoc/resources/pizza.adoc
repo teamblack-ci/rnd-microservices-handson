@@ -1,7 +1,7 @@
 [[resources-pizzas]]
 == Pizzas
 
-The Orders resources is used to manage pizzas.
+The Pizza resources are used to retrieve the pizza catalog.
 
 
 [[resources-pizzas-list]]
