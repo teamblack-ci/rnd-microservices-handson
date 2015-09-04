@@ -15,8 +15,13 @@ public class OrderResource extends ResourceSupport {
     private LocalDateTime estimatedTimeOfDelivery;
     private MonetaryAmount totalPrice;
     private List<LineItemResource> orderItems = new ArrayList<>();
+    private String comment;
 
     private Address deliveryAddress;
+
+    public OrderResource() {
+    }
+
     public OrderResource(Order order) {
         this.status = order.getStatus();
         this.created = order.getOrderedAt();
@@ -71,4 +76,13 @@ public class OrderResource extends ResourceSupport {
     public void setDeliveryAddress(Address deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
 }

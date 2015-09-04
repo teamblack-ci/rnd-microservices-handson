@@ -1,12 +1,13 @@
 package com.epages.microservice.handson.order;
 
-import static org.assertj.core.api.BDDAssertions.then;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -72,7 +73,8 @@ public class OrderControllerTest {
 
     private ResultActions ordersResultAction;
 
-    private String providersUri;
+    private String ordersUri;
+
     private String jsonInput;
 
     private String pizzaSampleResponse = "{\n" +
@@ -103,7 +105,7 @@ public class OrderControllerTest {
                 requestTo("http://localhost/catalog/1")).
                 andRespond(withSuccess(pizzaSampleResponse, MediaType.APPLICATION_JSON));
 
-        providersUri = entityLinks.linkToCollectionResource(Order.class).getHref();
+        ordersUri = linkTo(methodOn(OrderController.class).getAll(null, null)).toUri().toString();
     }
 
     @Test
@@ -114,13 +116,8 @@ public class OrderControllerTest {
 
         ordersResultAction
                 .andExpect(status().is(HttpStatus.CREATED.value()))
-                .andExpect(header().string(HttpHeaders.LOCATION, startsWith(providersUri)))
+                .andExpect(header().string(HttpHeaders.LOCATION, startsWith(ordersUri)))
         ;
-
-        then(order.getItems()).hasSize(1);
-        then(order.getItems().get(0).getPrice()).isNotNull();
-        then(order.getStatus()).isEqualTo(OrderStatus.NEW);
-        then(order.getOrderedAt()).isNotNull();
 
         verify(orderEventPublisher).sendOrderCreatedEvent(order);
     }
@@ -171,7 +168,7 @@ public class OrderControllerTest {
     }
 
     private void whenOrderCreated() throws Exception {
-        ordersResultAction = mockMvc.perform(post(providersUri)
+        ordersResultAction = mockMvc.perform(post(ordersUri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonInput));
 
