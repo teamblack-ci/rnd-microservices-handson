@@ -29,6 +29,8 @@ ext {
     snippetsDir = file('build/generated-snippets')
 }
 
+version = '0.0.1-SNAPSHOT'
+
 asciidoctor {
     sources {
         include '*.adoc'
@@ -40,8 +42,6 @@ asciidoctor {
     inputs.dir snippetsDir
     dependsOn test
 }
-
-version = '0.0.1-SNAPSHOT'
 
 jar {
     dependsOn asciidoctor

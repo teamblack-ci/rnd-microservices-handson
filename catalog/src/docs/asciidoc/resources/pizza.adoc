@@ -1,0 +1,41 @@
+[[resources-pizzas]]
+== Pizzas
+
+The Orders resources is used to manage pizzas.
+
+
+[[resources-pizzas-list]]
+=== Listing pizzas
+
+A `GET` request will list all of the service's pizzas.
+
+==== Response structure
+
+include::{snippets}/pizzas-list/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/pizzas-list/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/pizzas-list/http-response.adoc[]
+
+
+[[resources-pizza-get]]
+=== Retrieving an pizza
+
+A `GET` request is used to retrieve the details of an pizza.
+
+==== Response structure
+
+include::{snippets}/pizza-get/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/pizza-get/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/pizza-get/http-response.adoc[]
+
