@@ -157,7 +157,7 @@ public class BakeryServiceTest {
         mockServer.expect(requestTo(bakeryOrder.getOrderLink())).andRespond(withSuccess(orderResponse, MediaType.APPLICATION_JSON));
 
         //complete the future when deliveryEventPublisher.sendDeliveredEvent is called
-        doAnswer(new Answer() {
+        doAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 asyncInteractionFuture.complete(true);
