@@ -1,14 +1,22 @@
 package com.epages.microservice.handson.order;
 
-import org.springframework.hateoas.ResourceSupport;
+import java.net.URI;
 
 import javax.money.MonetaryAmount;
-import java.net.URI;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.hateoas.ResourceSupport;
 
 public class LineItemResource extends ResourceSupport {
 
+    @NotNull
     private URI pizza;
+
+    @NotNull
+    @Min(1)
     private Integer amount;
+
     private MonetaryAmount price;
 
     public LineItemResource() {

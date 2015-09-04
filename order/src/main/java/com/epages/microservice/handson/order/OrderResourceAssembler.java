@@ -21,7 +21,7 @@ public class OrderResourceAssembler extends ResourceAssemblerSupport<Order, Orde
                     //add links
                     return orderItemResource;
                 }).collect(Collectors.toList()));
-        orderResource.setDeliveryAddress(order.getDeliveryAddress());
+        orderResource.setDeliveryAddress(new AddressResource(order.getDeliveryAddress()));
         return orderResource;
     }
 

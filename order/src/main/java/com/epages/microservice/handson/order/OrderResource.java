@@ -5,19 +5,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.money.MonetaryAmount;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.hateoas.ResourceSupport;
 
 public class OrderResource extends ResourceSupport {
 
     private OrderStatus status;
+
     private LocalDateTime created;
+
     private LocalDateTime estimatedTimeOfDelivery;
+
     private MonetaryAmount totalPrice;
+
+    @Valid
     private List<LineItemResource> orderItems = new ArrayList<>();
+
     private String comment;
 
-    private Address deliveryAddress;
+    @Valid
+    @NotNull
+    private AddressResource deliveryAddress;
 
     public OrderResource() {
     }
@@ -69,11 +79,11 @@ public class OrderResource extends ResourceSupport {
         this.orderItems = orderItems;
     }
 
-    public Address getDeliveryAddress() {
+    public AddressResource getDeliveryAddress() {
         return deliveryAddress;
     }
 
-    public void setDeliveryAddress(Address deliveryAddress) {
+    public void setDeliveryAddress(AddressResource deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
 

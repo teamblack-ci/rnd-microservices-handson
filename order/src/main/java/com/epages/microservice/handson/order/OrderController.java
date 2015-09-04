@@ -6,6 +6,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import java.net.URI;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,9 +59,9 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> create(@RequestBody OrderResource orderResource) {
+    public ResponseEntity<Void> create(@RequestBody @Valid OrderResource orderResource) {
         Order order = new Order();
-        order.setDeliveryAddress(orderResource.getDeliveryAddress());
+        order.setDeliveryAddress(orderResource.getDeliveryAddress().toEntity());
         order.setComment(orderResource.getComment());
         order.setItems(orderResource.getOrderItems().stream()
                 .map(LineItemResource::toEntity)
