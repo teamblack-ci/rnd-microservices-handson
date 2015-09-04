@@ -132,8 +132,9 @@ public class DeliveryServiceTest {
         //then
         verify(deliveryEventPublisher).sendDeliveryOrderReceivedEvent(deliveryEventCaptor.capture());
         then(deliveryEventCaptor.getValue().getEstimatedTimeOfDelivery()).isEqualTo(bakingOrderReceivedEvent.getEstimatedTimeOfCompletion().plusNanos(2_000_000));
-        then(deliveryOrderRepository.findByOrderLink(bakingOrderReceivedEvent.getOrderLink())).isNotNull();
-        then(deliveryOrderRepository.findByOrderLink(bakingOrderReceivedEvent.getOrderLink()).getDeliveryOrderState()).isEqualTo(DeliveryOrderState.QUEUED);
+        then(deliveryService.getByOrderLink(bakingOrderReceivedEvent.getOrderLink()).isPresent()).isTrue();
+        then(deliveryService.getByOrderLink(bakingOrderReceivedEvent.getOrderLink()).get()).isNotNull();
+        then(deliveryService.getByOrderLink(bakingOrderReceivedEvent.getOrderLink()).get().getDeliveryOrderState()).isEqualTo(DeliveryOrderState.QUEUED);
     }
 
     @Test

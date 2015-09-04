@@ -122,8 +122,8 @@ public class BakeryServiceTest {
         verify(bakeryEventPublisher).sendBakingOrderReceivedEvent(bakeryEventCaptor.capture());
         then(bakeryEventCaptor.getValue().getEstimatedTimeOfCompletion()).isNotNull();
         then(bakeryEventCaptor.getValue().getOrderLink()).isEqualTo(orderUri);
-        then(bakeryOrderRepository.findByOrderLink(orderUri)).isNotNull();
-        then(bakeryOrderRepository.findByOrderLink(orderUri).getBakeryOrderState()).isEqualTo(BakeryOrderState.QUEUED);
+        then(bakeryService.getByOrderLink(orderUri).isPresent()).isTrue();
+        then(bakeryService.getByOrderLink(orderUri).get().getBakeryOrderState()).isEqualTo(BakeryOrderState.QUEUED);
     }
 
     @Test
