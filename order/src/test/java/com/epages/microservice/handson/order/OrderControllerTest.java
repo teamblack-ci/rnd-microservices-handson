@@ -184,7 +184,7 @@ public class OrderControllerTest {
         jsonInput = objectMapper.writeValueAsString(ImmutableMap.of(
                 "comment", "Some comment",
                 "deliveryAddress", address,
-                "items", ImmutableList.of(ImmutableMap.of(
+                "orderItems", ImmutableList.of(ImmutableMap.of(
                                 "amount", 1,
                                 "pizza", "http://localhost/catalog/1"
                         )
