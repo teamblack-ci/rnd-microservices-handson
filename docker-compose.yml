@@ -65,7 +65,7 @@ orderui:
     - RABBITMQ_HOST=rabbitmq
     - RABBITMQ_PORT=5672
     - PORT=8082
-    - CATALOG_API_BACKEND_HOST=http://localhost:8081
-    - ORDER_API_BACKEND_HOST=http://localhost:8082
+    - CATALOG_API_BACKEND_HOST=http://172.17.42.1:8081
+    - ORDER_API_BACKEND_HOST=http://172.17.42.1:8082
   ports:
    - "8085:8085"
