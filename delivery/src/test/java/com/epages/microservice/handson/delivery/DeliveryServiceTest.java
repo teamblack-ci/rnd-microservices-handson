@@ -28,13 +28,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.IntegrationTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
@@ -42,9 +40,8 @@ import org.springframework.web.client.RestTemplate;
 import com.epages.microservice.handson.delivery.order.Order;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = DeliveryApplication.class)
-@ActiveProfiles("DeliveryServiceTest")
-@WebIntegrationTest(value = {"delivery.timeToPrepareDeliveryInMillis:1", "delivery.timeToDeliverInMillis:1"})
+@DeliveryApplicationTest(activeProfiles = { "test", "DeliveryServiceTest" })
+@IntegrationTest({ "delivery.timeToPrepareDeliveryInMillis:1", "delivery.timeToDeliverInMillis:1" })
 public class DeliveryServiceTest {
 
     @Autowired
@@ -131,10 +128,12 @@ public class DeliveryServiceTest {
 
         //then
         verify(deliveryEventPublisher).sendDeliveryOrderReceivedEvent(deliveryEventCaptor.capture());
-        then(deliveryEventCaptor.getValue().getEstimatedTimeOfDelivery()).isEqualTo(bakingOrderReceivedEvent.getEstimatedTimeOfCompletion().plusNanos(2_000_000));
+        then(deliveryEventCaptor.getValue().getEstimatedTimeOfDelivery())
+                .isEqualTo(bakingOrderReceivedEvent.getEstimatedTimeOfCompletion().plusNanos(2_000_000));
         then(deliveryService.getByOrderLink(bakingOrderReceivedEvent.getOrderLink()).isPresent()).isTrue();
         then(deliveryService.getByOrderLink(bakingOrderReceivedEvent.getOrderLink()).get()).isNotNull();
-        then(deliveryService.getByOrderLink(bakingOrderReceivedEvent.getOrderLink()).get().getDeliveryOrderState()).isEqualTo(DeliveryOrderState.QUEUED);
+        then(deliveryService.getByOrderLink(bakingOrderReceivedEvent.getOrderLink()).get().getDeliveryOrderState())
+                .isEqualTo(DeliveryOrderState.QUEUED);
     }
 
     @Test
@@ -173,7 +172,6 @@ public class DeliveryServiceTest {
                 return null;
             }
         }).when(deliveryEventPublisher).sendDeliveredEvent(any());
-
 
     }
 

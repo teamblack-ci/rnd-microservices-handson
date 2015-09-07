@@ -24,13 +24,11 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.IntegrationTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
@@ -38,9 +36,8 @@ import org.springframework.web.client.RestTemplate;
 import com.epages.microservice.handson.bakery.order.Order;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = BakeryApplication.class)
-@ActiveProfiles("BakeryServiceTest")
-@WebIntegrationTest("bakery.timeToBakePizzaInMillis:1")
+@BakeryApplicationTest(activeProfiles = {"test", "BakeryServiceTest"})
+@IntegrationTest("bakery.timeToBakePizzaInMillis:1")
 public class BakeryServiceTest {
 
     @Autowired
