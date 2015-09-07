@@ -81,7 +81,8 @@ public class BakeryOrderControllerTest {
                 .andDo(document("bakeryorders-list", //
                         responseFields(
                                 fieldWithPath("_links").description("<<links,Links>> to other resources"),
-                                fieldWithPath("_embedded").description("Embedded <<resources-bakeryorder-get,Bakery Orders>>")
+                                fieldWithPath("_embedded").description("Embedded <<resources-bakeryorder-get,Bakery Orders>>"),
+                                fieldWithPath("page").description("<<paging,Paging>> information")
                 )))
         ;
     }
