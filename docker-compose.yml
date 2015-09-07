@@ -1,37 +1,7 @@
-order:
-  build: order
-  volumes:
-    - order/build/libs:/app
-  external_links:
-    - infrastructure_rabbitmq_1:rabbitmq
-  environment:
-    - PROFILE=prod
-    - RABBITMQ_HOST=rabbitmq
-    - RABBITMQ_PORT=5672
-    - PORT=8082
-  ports:
-   - "8082:8082"
-
-orderui:
-  build: order-ui
-  volumes:
-    - order-ui/build/libs:/app
-  external_links:
-    - infrastructure_rabbitmq_1:rabbitmq
-  environment:
-    - PROFILE=prod
-    - RABBITMQ_HOST=rabbitmq
-    - RABBITMQ_PORT=5672
-    - PORT=8082
-    - ORDER_API_BACKEND_HOST=http://192.168.99.100:8082
-    - CATALOG_API_BACKEND_HOST=http://192.168.99.100:8081
-  ports:
-   - "8085:8085"
-
 catalog:
   build: catalog
   volumes:
-    - catalog/build/libs:/app
+    - "./catalog/build/libs:/app"
   external_links:
     - infrastructure_rabbitmq_1:rabbitmq
   environment:
@@ -42,10 +12,24 @@ catalog:
   ports:
    - "8081:8081"
 
+order:
+  build: order
+  volumes:
+    - "./order/build/libs:/app"
+  external_links:
+    - infrastructure_rabbitmq_1:rabbitmq
+  environment:
+    - PROFILE=prod
+    - RABBITMQ_HOST=rabbitmq
+    - RABBITMQ_PORT=5672
+    - PORT=8082
+  ports:
+   - "8082:8082"
+
 bakery:
   build: bakery
   volumes:
-    - bakery/build/libs:/app
+    - "./bakery/build/libs:/app"
   external_links:
     - infrastructure_rabbitmq_1:rabbitmq
   environment:
@@ -59,7 +43,7 @@ bakery:
 delivery:
   build: delivery
   volumes:
-    - delivery/build/libs:/app
+    - "./delivery/build/libs:/app"
   external_links:
     - infrastructure_rabbitmq_1:rabbitmq
   environment:
@@ -69,3 +53,19 @@ delivery:
     - PORT=8084
   ports:
     - "8084:8084"
+
+orderui:
+  build: order-ui
+  volumes:
+    - "./order-ui/build/libs:/app"
+  external_links:
+    - infrastructure_rabbitmq_1:rabbitmq
+  environment:
+    - PROFILE=prod
+    - RABBITMQ_HOST=rabbitmq
+    - RABBITMQ_PORT=5672
+    - PORT=8082
+    - CATALOG_API_BACKEND_HOST=http://localhost:8081
+    - ORDER_API_BACKEND_HOST=http://localhost:8082
+  ports:
+   - "8085:8085"
