@@ -81,7 +81,8 @@ public class DeliveryOrderControllerTest {
                 .andDo(document("deliveryorders-list", //
                         responseFields(
                                 fieldWithPath("_links").description("<<links,Links>> to other resources"),
-                                fieldWithPath("_embedded").description("Embedded <<resources-deliveryorder-get,Delivery Orders>>")
+                                fieldWithPath("_embedded").description("Embedded <<resources-deliveryorder-get,Delivery Orders>>"),
+                                fieldWithPath("page").description("<<paging,Paging>> information")
                 )))
         ;
     }
