@@ -9,6 +9,9 @@
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
 <mapEntry key="RABBITMQ_HOST" value="localhost"/>
 </mapAttribute>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+</listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.epages.microservice.handson.delivery.DeliveryApplication"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="delivery"/>
 </launchConfiguration>

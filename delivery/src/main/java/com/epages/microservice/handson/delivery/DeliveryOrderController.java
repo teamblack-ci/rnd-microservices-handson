@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.Optional;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
 @RestController
 @RequestMapping("/delivery-orders")
 @ExposesResourceFor(DeliveryOrder.class)
@@ -28,7 +26,7 @@ public class DeliveryOrderController {
         this.deliveryService = deliveryService;
     }
 
-    @RequestMapping(method = GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<PagedResources<Resource<DeliveryOrder>>> getAll(Pageable pageable, PagedResourcesAssembler<DeliveryOrder> pagedResourcesAssembler) {
         Page<DeliveryOrder> deliveryOrders = deliveryService.getAll(pageable);
 
