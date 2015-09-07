@@ -23,7 +23,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
-project.version = '0.1.12'
+project.version = '0.1.13'
 
 jar {
     baseName = 'shared'
