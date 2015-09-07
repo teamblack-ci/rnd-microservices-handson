@@ -71,7 +71,7 @@ public class ApiDocumentation {
         .andDo(document("index-example",
                 links(
                         linkWithRel("bakeryOrders").description("The <<resources-bakeryorders,Bakery Orders resource>>"),
-                        linkWithRel("profile").description("The ALPS profile.")
+                        linkWithRel("self").description("The Index resource")
                 )));
     }
 
