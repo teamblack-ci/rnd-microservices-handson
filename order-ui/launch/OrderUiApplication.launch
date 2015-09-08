@@ -11,6 +11,7 @@
 <mapEntry key="ORDER_API_BACKEND_HOST" value="http://localhost:8082"/>
 </mapAttribute>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.epages.microservice.handson.orderui.OrderUiApplication"/>
