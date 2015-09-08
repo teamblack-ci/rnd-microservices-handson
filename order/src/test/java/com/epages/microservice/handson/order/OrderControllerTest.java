@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -54,6 +55,9 @@ public class OrderControllerTest {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Autowired
     private EntityLinks entityLinks;
@@ -111,6 +115,10 @@ public class OrderControllerTest {
                 andRespond(withSuccess(pizzaSampleResponse, MediaType.APPLICATION_JSON));
 
         ordersUri = linkTo(methodOn(OrderController.class).getAll(null, null)).toUri().toString();
+
+        orderRepository.deleteAll();
+
+        reset(orderEventPublisher);
     }
 
     @Test
@@ -182,7 +190,7 @@ public class OrderControllerTest {
                                 fieldWithPath("_embedded").description("Current page of <<resources-order-get,Orders>>"),
                                 fieldWithPath("page").description("<<paging,Paging>> information"),
                                 fieldWithPath("_links").description("<<links,Links>> to other resources")
-                ))) //
+                        ))) //
         ;
     }
     private void whenAllOrdersRetrieved() throws Exception {
@@ -234,7 +242,7 @@ public class OrderControllerTest {
                 "city", "Hamburg",
                 "telephone", "+49404321343"
         )).put("postalCode", "22305") //
-          .put("email","your@email.address") //
+          .put("email", "your@email.address") //
         .build();
 
         jsonInput = objectMapper.writeValueAsString(ImmutableMap.of(
