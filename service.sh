@@ -7,29 +7,44 @@ echo "--> removing stopped containers"
 docker-compose rm -fv
 
 echo "--> building microservice"
-cd shared
-./gradlew install
-cd ..
 
-cd catalog
-./gradlew bootRepackage
-cd ..
+echo
+echo "#############################################"
+echo "# building 'shared'                         #"
+echo "#############################################"
+./shared/gradlew -p shared install
 
-cd order
-./gradlew bootRepackage
-cd ..
+echo
+echo "#############################################"
+echo "# building 'catalog'                        #"
+echo "#############################################"
+./catalog/gradlew -p catalog bootRepackage
 
-cd bakery
-./gradlew bootRepackage
-cd ..
+echo
+echo "#############################################"
+echo "# building 'order'                          #"
+echo "#############################################"
+./order/gradlew -p order bootRepackage
 
-cd delivery
-./gradlew bootRepackage
-cd ..
+echo
+echo "#############################################"
+echo "# building 'bakery'                         #"
+echo "#############################################"
+./bakery/gradlew -p bakery bootRepackage
 
-cd order-ui
-./gradlew bootRepackage
-cd ..
+echo
+echo "#############################################"
+echo "# building 'delivery'                       #"
+echo "#############################################"
+./delivery/gradlew -p delivery bootRepackage
+
+echo
+echo "#############################################"
+echo "# building 'order-ui'                       #"
+echo "#############################################"
+./order-ui/gradlew -p order-ui bootRepackage
+
+docker-compose build --no-cache orderui
 
 echo "--> building new containers"
 docker-compose build --no-cache
