@@ -7,4 +7,7 @@ import java.net.URI;
 public interface BakeryOrderRepository extends PagingAndSortingRepository<BakeryOrder, Long> {
 
     //TODO create a finder method to retrieve a BakeryOrder by orderLink
+	BakeryOrder findByOrderLink(URI orderLink);
+	
+	
 }

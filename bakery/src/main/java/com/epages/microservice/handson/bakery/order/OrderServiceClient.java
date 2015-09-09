@@ -21,7 +21,7 @@ public class OrderServiceClient {
     }
 
     public Order getOrder(URI orderUri) {
-        Order order = null;
+        Order order = restTemplate.getForObject(orderUri, Order.class);
         //TODO use the restTemplate and the orderUri to retrieve an order from the order service
         LOGGER.info("Read order from URI {} - got {}", orderUri, order);
         return order;

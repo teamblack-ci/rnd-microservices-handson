@@ -53,6 +53,11 @@ public class BakeryOrderController {
             afterwards transform the result into an ResponseEntity
             HINT: look at the get method above to find out how to construct resources and ResponseEntity
          */
+    	Optional<BakeryOrder> bakeryOrder = bakeryService.getByOrderLink(orderLink);
+    	if (bakeryOrder.isPresent()) {
+    		return ResponseEntity.ok(new Resource<BakeryOrder>(bakeryOrder.get()));
+    	}
+    	
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

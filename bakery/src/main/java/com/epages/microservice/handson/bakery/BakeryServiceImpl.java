@@ -51,7 +51,8 @@ public class BakeryServiceImpl implements BakeryService {
     public Optional<BakeryOrder> getByOrderLink(URI orderLink) {
         /*TODO after you have implemented the finder in BakeryOrderRepository to find an order by link
          call this method here and transform the result to an Optional */
-        return Optional.empty();
+    	BakeryOrder bakeryOrder = bakeryOrderRepository.findByOrderLink(orderLink);
+    	return Optional.ofNullable(bakeryOrder);
     }
 
     @Override
