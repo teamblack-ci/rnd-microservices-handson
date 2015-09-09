@@ -52,7 +52,8 @@ class DeliveryServiceImpl implements DeliveryService {
     public Optional<DeliveryOrder> getByOrderLink(URI orderLink) {
         /*TODO after you have implemented the finder in DeliveryOrderRepository to find an order by link
          call this method here and transform the result to an Optional */
-        return Optional.empty();
+    	DeliveryOrder order = deliveryOrderRepository.findByOrderLink(orderLink);
+    	return Optional.ofNullable(order);
     }
 
     @Override

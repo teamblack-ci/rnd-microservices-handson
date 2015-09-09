@@ -95,6 +95,12 @@ public class DeliveryOrderControllerTest {
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.orderLink", is(deliveryOrder.getOrderLink().toString())))
                 .andExpect(jsonPath("$.deliveryOrderState", is(deliveryOrder.getDeliveryOrderState().name())))
+                .andDo(document("deliveryorder-get-order-by-link", //
+                        responseFields(
+                        		fieldWithPath("orderLink").description("order link"),
+                                fieldWithPath("deliveryOrderState").description("delivery order status: " 
+                                + DeliveryOrderState.QUEUED.toString() + ", " + DeliveryOrderState.IN_PROGRESS.toString() + ", " + DeliveryOrderState.DONE.toString())
+                    )))
         ;
     }
 

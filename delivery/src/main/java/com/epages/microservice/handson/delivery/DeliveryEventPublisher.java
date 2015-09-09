@@ -27,7 +27,11 @@ public class DeliveryEventPublisher {
         eventPublisher.publish(DELIVERY_ORDER_RECEIVED_EVENT_TYPE, payloadMap);
     }
 
-    public void sendDeliveredEvent(Order order) {
+    public void sendDeliveredEvent(Order order) {	
+    	 Map<String, Object> payloadMap = ImmutableMap.of(
+    			 "orderLink", order.getOrderLink());
+    	 eventPublisher.publish(DELIVERED_EVENT_TYPE, payloadMap);
+    	
         //TODO construct an event payload and use the eventPublisher to send event with type DELIVERED_EVENT_TYPE
     }
 }

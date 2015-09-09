@@ -49,6 +49,11 @@ public class DeliveryOrderController {
             afterwards transform the result into an ResponseEntity
             HINT: look at the get method above to find out how to construct resources and ResponseEntity
          */
+    	Optional<DeliveryOrder> order = deliveryService.getByOrderLink(orderLink);
+    	if(order.isPresent()) {
+    		return ResponseEntity.ok(new Resource<DeliveryOrder>(order.get()));
+    	}
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 }

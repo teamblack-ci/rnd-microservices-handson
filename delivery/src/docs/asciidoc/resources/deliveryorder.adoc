@@ -39,3 +39,19 @@ include::{snippets}/deliveryorder-get/curl-request.adoc[]
 
 include::{snippets}/deliveryorder-get/http-response.adoc[]
 
+=== Retrieving a delivery order by order link
+
+A `GET` request is used to retrieve the details of a delivery order by order link.
+
+==== Response structure
+
+include::{snippets}/deliveryorder-get-order-by-link/response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/deliveryorder-get-order-by-link/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/deliveryorder-get-order-by-link/http-response.adoc[]
+
